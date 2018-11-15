@@ -29,7 +29,7 @@ public class Motor {
      */
     public void setPower(double powerTarget) {
         double pow = Range.clip(powerTarget, this.minPower,1.0);
-        this.motor.setPower(pow/100);
+        this.motor.setPower(pow);
     }
 
     public double getPower() {
