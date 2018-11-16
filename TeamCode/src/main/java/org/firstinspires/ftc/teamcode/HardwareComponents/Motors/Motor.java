@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 
 public class Motor {
 
-    protected final DcMotor motor;
+    public final DcMotor motor;
     public double minPower = 0;
 
     /**

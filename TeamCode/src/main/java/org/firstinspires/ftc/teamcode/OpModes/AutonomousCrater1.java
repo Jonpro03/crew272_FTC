@@ -28,8 +28,6 @@ public class AutonomousCrater1 extends LinearOpMode {
         sleep(500);
         robot.screwLift.retract(false);
         robot.drivetrain.driveRoute(Routes.DEPARTURE);
-
-
         checkGoldOre();
         robot.drivetrain.driveRoute(Routes.MOVE_TO_NEXT_ORE);
         if (!goldFound)

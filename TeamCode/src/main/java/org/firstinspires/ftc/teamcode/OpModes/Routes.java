@@ -11,7 +11,7 @@ class Routes {
     static final StraightRoute REVERSE_INTO_CRATER = new StraightRoute(-110, 1, 10);
 
     static final AutonomousRoute DEPARTURE = new AutonomousRoute(Arrays.asList(
-            new StraightRoute(25.15, 1, 3), // drive forward from the lander
+            new StraightRoute(25.15, 0.8, 3), // drive forward from the lander
             new Rotation(-90, 0.8, 2), // Turn left in front of the ores
             new StraightRoute(-18.5, 1, 2)// Reverse to position in front of the first ore
     ));

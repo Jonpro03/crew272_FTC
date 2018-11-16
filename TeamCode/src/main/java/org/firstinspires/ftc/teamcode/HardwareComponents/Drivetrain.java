@@ -36,7 +36,7 @@ public class Drivetrain {
     public Drivetrain(DcMotor leftDrive, DcMotor rightDrive, boolean isDriverControl) {
         leftDriveMotor = new EncodedMotor(leftDrive);
         rightDriveMotor = new EncodedMotor(rightDrive);
-        leftDriveMotor.setReverse();
+        rightDriveMotor.setReverse();
 
         if (isDriverControl) {
             leftDriveMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

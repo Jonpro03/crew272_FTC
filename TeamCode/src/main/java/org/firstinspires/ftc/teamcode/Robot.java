@@ -56,7 +56,7 @@ public class Robot {
         scoop.init();
 
         // Initialize screwLift
-        screwLift.init();
+        //screwLift.init();
 
         // Initialize Color Sensor
         if (colorSensor instanceof SwitchableLight) {

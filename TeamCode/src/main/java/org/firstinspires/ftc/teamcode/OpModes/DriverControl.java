@@ -26,7 +26,10 @@ public class DriverControl extends OpMode {
     }
 
     @Override
-    public void start() { runtime.reset(); }
+    public void start() {
+        robot.screwLift.init();
+        runtime.reset();
+    }
 
     @Override
     public void loop() {
@@ -73,10 +76,10 @@ public class DriverControl extends OpMode {
 
         // Accept inputs for screw drive and latch
         if (gamepad2.dpad_up) {
-            robot.screwLift.retract();
+            robot.screwLift.retract(false);
         }
         if (gamepad2.dpad_down) {
-            robot.screwLift.extend();
+            robot.screwLift.extend(false);
         }
 
         if (gamepad2.a) {
@@ -88,9 +91,10 @@ public class DriverControl extends OpMode {
 
 
         // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.addData("Status", "Run Time: " +
+                "" + runtime.toString());
         telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-        telemetry.addData("Adjusted Power", "left (%.2f), right (%.2f)", robot.drivetrain.currentLeftPower, robot.drivetrain.currentRightPower);
+        telemetry.addData("Encoder Pos", robot.screwLift.motor.getCurrentPosition());
         telemetry.addData("Actual Power", "left (%.2f), right (%.2f)", robot.drivetrain.leftDriveMotor.getPower(), robot.drivetrain.rightDriveMotor.getPower());
         telemetry.addData("Limit Switch", robot.screwLift.getSwitchPressed() ? "pressed" : "unpressed");
     }

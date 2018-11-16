@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 public class BoundedMotor extends EncodedMotor {
 
     static final int LOWER_BOUND = 0;
-    static final int UPPER_BOUND = 14400;
+    static final int UPPER_BOUND = 32768;
 
     private final DigitalChannel limitSwitch;
 
@@ -31,16 +31,20 @@ public class BoundedMotor extends EncodedMotor {
      */
     public void init() {
         resetEncoder();
+        useSmooth = false;
         boolean switchPressed = getSwitchPressed();
 
         if (switchPressed) { return; }
 
         // Lower the motor and check for the switch press.
-        setTarget(-UPPER_BOUND);
+        motor.setTargetPosition(-UPPER_BOUND);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        moveToTarget(0.8);
         while (!switchPressed) {
-            setPower(-1);
             switchPressed = getSwitchPressed();
         }
+        stop();
         resetEncoder();
     }
 
