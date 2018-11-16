@@ -13,16 +13,16 @@ public class DriverControl extends OpMode {
     protected Robot robot;
     private ElapsedTime runtime = new ElapsedTime();
 
-    static final float SCOOP_SENSITIVITY_FACTOR = 0.1f;
+    static final float SCOOP_SENSITIVITY_FACTOR = 0.03f;
 
     @Override
     public void init() {
         robot = new Robot(hardwareMap, true);
-        robot.Init();
+        robot.init();
         telemetry.addData("Status", "Initialized");
         robot.screwLift.useSmooth = false;
-        robot.Drivetrain.leftDriveMotor.useSmooth = false;
-        robot.Drivetrain.rightDriveMotor.useSmooth = false;
+        robot.drivetrain.leftDriveMotor.useSmooth = false;
+        robot.drivetrain.rightDriveMotor.useSmooth = false;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class DriverControl extends OpMode {
         double leftPower = Range.clip((throttleInput + leftInput), -1, 1);
         double rightPower = Range.clip((throttleInput + rightInput), -1, 1);
 
-        robot.Drivetrain.drive(leftPower, rightPower);
+        robot.drivetrain.drive(leftPower, rightPower);
 
         // Accept inputs for the scoop
         robot.scoop.setPosition(robot.scoop.getPosition() +
@@ -90,14 +90,14 @@ public class DriverControl extends OpMode {
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-        telemetry.addData("Adjusted Power", "left (%.2f), right (%.2f)", robot.Drivetrain.currentLeftPower, robot.Drivetrain.currentRightPower);
-        telemetry.addData("Actual Power", "left (%.2f), right (%.2f)", robot.Drivetrain.leftDriveMotor.getPower(), robot.Drivetrain.rightDriveMotor.getPower());
-        telemetry.addData("Limit Switch", robot.screwLift.getSwitchState() ? "pressed" : "unpressed");
+        telemetry.addData("Adjusted Power", "left (%.2f), right (%.2f)", robot.drivetrain.currentLeftPower, robot.drivetrain.currentRightPower);
+        telemetry.addData("Actual Power", "left (%.2f), right (%.2f)", robot.drivetrain.leftDriveMotor.getPower(), robot.drivetrain.rightDriveMotor.getPower());
+        telemetry.addData("Limit Switch", robot.screwLift.getSwitchPressed() ? "pressed" : "unpressed");
     }
 
     @Override
     public void stop() {
-        robot.Halt();
+        robot.halt();
     }
 
 }

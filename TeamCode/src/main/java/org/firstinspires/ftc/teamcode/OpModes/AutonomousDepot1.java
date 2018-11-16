@@ -14,7 +14,7 @@ public class AutonomousDepot1 extends LinearOpMode {
 
     public void initialize() {
         robot = new Robot(hardwareMap, false);
-        robot.Init();
+        robot.init();
         telemetry.addData("Status", "Initialized");
     }
 
@@ -28,31 +28,31 @@ public class AutonomousDepot1 extends LinearOpMode {
         robot.latch.open();
         sleep(500);
         robot.screwLift.retract(false);
-        robot.Drivetrain.driveRoute(Routes.DEPARTURE);
+        robot.drivetrain.driveRoute(Routes.DEPARTURE);
 
         checkGoldOre();
-        robot.Drivetrain.driveRoute(Routes.MOVE_TO_NEXT_ORE);
+        robot.drivetrain.driveRoute(Routes.MOVE_TO_NEXT_ORE);
         if (!goldFound)
             checkGoldOre();
-        robot.Drivetrain.driveRoute(Routes.MOVE_TO_NEXT_ORE);
+        robot.drivetrain.driveRoute(Routes.MOVE_TO_NEXT_ORE);
         if (!goldFound)
             checkGoldOre();
 
-        robot.Drivetrain.driveRoute(Routes.DEPOT_SIDE_ORE_TO_DEPOT);
+        robot.drivetrain.driveRoute(Routes.DEPOT_SIDE_ORE_TO_DEPOT);
 
         robot.scoop.open();
         sleep(1000);
         robot.scoop.close();
 
-        robot.Drivetrain.driveRoute(Routes.REVERSE_INTO_CRATER);
+        robot.drivetrain.driveRoute(Routes.REVERSE_INTO_CRATER);
 
     }
 
     private void checkGoldOre() {
         NormalizedRGBA colors;
-        colors = robot.ColorSensor.getNormalizedColors();
+        colors = robot.colorSensor.getNormalizedColors();
         goldFound = colors.blue < colors.red && colors.blue < colors.green;
         if (goldFound)
-            robot.Drivetrain.driveRoute(Routes.ORE_FOUND);
+            robot.drivetrain.driveRoute(Routes.ORE_FOUND);
     }
 }

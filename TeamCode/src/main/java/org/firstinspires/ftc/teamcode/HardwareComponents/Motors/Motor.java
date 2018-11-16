@@ -28,7 +28,16 @@ public class Motor {
      * @param powerTarget
      */
     public void setPower(double powerTarget) {
-        double pow = Range.clip(powerTarget, this.minPower,1.0);
+        //Sanity Checks
+        if (powerTarget == 0 || motor.getPower() == powerTarget) { return; }
+
+        double pow;
+
+        if (powerTarget > 0) {
+            pow = Range.clip(powerTarget, this.minPower,1.0);
+        } else {
+            pow = Range.clip(powerTarget, -1.0, -this.minPower);
+        }
         this.motor.setPower(pow);
     }
 

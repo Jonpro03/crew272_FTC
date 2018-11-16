@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
@@ -12,19 +14,22 @@ import org.firstinspires.ftc.teamcode.HardwareComponents.BoundedServo;
 import org.firstinspires.ftc.teamcode.HardwareComponents.Motors.BoundedMotor;
 
 public class Robot {
-    public final Drivetrain Drivetrain;
+    public final Drivetrain drivetrain;
     public final BoundedMotor screwLift;
     public final BoundedServo latch;
     public final BoundedServo scoop;
-    public final NormalizedColorSensor ColorSensor;
+    public final NormalizedColorSensor colorSensor;
+    public final int soundId;
 
     public Robot(HardwareMap hwmap, boolean isDriverControl) {
-        Drivetrain = new Drivetrain(hwmap.get(DcMotor.class, "left_drive"),
+        drivetrain = new Drivetrain(hwmap.get(DcMotor.class, "left_drive"),
                 hwmap.get(DcMotor.class, "right_drive"),
                 isDriverControl);
 
+        // Clockwise is extend. Counter-clockwise is retract.
         screwLift = new BoundedMotor(hwmap.get(DcMotor.class, "screw_drive"),
                 hwmap.get(DigitalChannel.class, "limit_switch"));
+        screwLift.setReverse();
 
         latch = new BoundedServo(hwmap.get(Servo.class, "latch"));
         latch.openPos = 0.5;
@@ -33,14 +38,16 @@ public class Robot {
 
         scoop = new BoundedServo(hwmap.get(Servo.class, "scoop"));
         scoop.setReverse();
-        scoop.openPos = 0.52;
-        scoop.closePos = 0.85;
+        scoop.openPos = 0.7;
+        scoop.closePos = 0.95;
         scoop.initPos = isDriverControl ? scoop.openPos : scoop.closePos;
 
-        ColorSensor = hwmap.get(NormalizedColorSensor.class, "color_sensor");
+        colorSensor = hwmap.get(NormalizedColorSensor.class, "color_sensor");
+        soundId = hwmap.appContext.getResources().getIdentifier("roll", "raw", hwmap.appContext.getPackageName());
+        SoundPlayer.getInstance().preload(hwmap.appContext, soundId);
     }
 
-    public void Init() {
+    public void init() {
 
         // Initialize latch
         latch.init();
@@ -52,14 +59,14 @@ public class Robot {
         screwLift.init();
 
         // Initialize Color Sensor
-        if (ColorSensor instanceof SwitchableLight) {
-            ((SwitchableLight) ColorSensor).enableLight(true);
+        if (colorSensor instanceof SwitchableLight) {
+            ((SwitchableLight) colorSensor).enableLight(true);
         }
     }
 
-    public void Halt() {
-        Drivetrain.rightDriveMotor.stop();
-        Drivetrain.leftDriveMotor.stop();
+    public void halt() {
+        drivetrain.rightDriveMotor.stop();
+        drivetrain.leftDriveMotor.stop();
         screwLift.stop();
     }
 }

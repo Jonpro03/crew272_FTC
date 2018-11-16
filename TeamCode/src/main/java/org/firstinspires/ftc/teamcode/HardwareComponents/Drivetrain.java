@@ -15,16 +15,18 @@ public class Drivetrain {
     static final double GEAR_REDUCTION = 2.0;
     static final double WHEEL_DIAMETER = 5.0;
     static final double TICKS_PER_INCH = (ENCODER_TICKS * GEAR_REDUCTION) / (WHEEL_DIAMETER * Math.PI);
+    static final int SMOOTHING_INTERVAL = 10;
 
     public final EncodedMotor leftDriveMotor;
     public final EncodedMotor rightDriveMotor;
     public double currentLeftPower, currentRightPower;
 
     private ElapsedTime runtime = new ElapsedTime();
+    private double intervalCounter = 0;
 
 
     /**
-     * Drivetrain consists of left and right drive motors.
+     * drivetrain consists of left and right drive motors.
      * For accurate paths, ensure WHEEL_DIAMETER and GEAR_REDUCTION are
      * set correctly.
      * @param leftDrive DcMotor for left drive.
@@ -56,7 +58,7 @@ public class Drivetrain {
      */
     public void driveRoute(AutonomousRoute ar) {
         for (Route r : ar.routeItems) {
-            this.driveRoute(r);
+            driveRoute(r);
             sleep(ar.pauseMS);
         }
     }
@@ -67,8 +69,8 @@ public class Drivetrain {
      */
     public void driveRoute(Route route) {
         runtime.reset();
-        leftDriveMotor.setTarget(route.leftIn * TICKS_PER_INCH);
-        rightDriveMotor.setTarget(route.rightIn * TICKS_PER_INCH);
+        leftDriveMotor.setTarget((int) (route.leftIn * TICKS_PER_INCH));
+        rightDriveMotor.setTarget((int) (route.rightIn * TICKS_PER_INCH));
 
         boolean leftPathComplete, rightPathComplete;
         leftPathComplete = rightPathComplete = false;
@@ -90,10 +92,13 @@ public class Drivetrain {
      */
     public void drive(double left, double right) {
         // Average current and desired power to get a smoothing average.
-        currentLeftPower = (currentLeftPower + currentLeftPower + left) / 3.0;
-        currentRightPower = (currentRightPower + currentRightPower + right) / 3.0;
+        if (intervalCounter % SMOOTHING_INTERVAL == 0) {
+            currentLeftPower = (currentLeftPower + currentLeftPower + left) / 3.0;
+            currentRightPower = (currentRightPower + currentRightPower + right) / 3.0;
 
-        leftDriveMotor.setPower(currentLeftPower);
-        rightDriveMotor.setPower(currentRightPower);
+            leftDriveMotor.setPower(currentLeftPower);
+            rightDriveMotor.setPower(currentRightPower);
+        }
+        intervalCounter++;
     }
 }

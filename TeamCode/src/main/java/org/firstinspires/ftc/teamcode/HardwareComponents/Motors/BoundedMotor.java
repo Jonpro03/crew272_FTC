@@ -4,12 +4,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.Movement.SmoothMovement;
-
 public class BoundedMotor extends EncodedMotor {
 
-    static final double LOWER_BOUND = 0;
-    static final double UPPER_BOUND = 14400;
+    static final int LOWER_BOUND = 0;
+    static final int UPPER_BOUND = 14400;
 
     private final DigitalChannel limitSwitch;
 
@@ -23,7 +21,7 @@ public class BoundedMotor extends EncodedMotor {
         super(tetrixMotor);
         this.limitSwitch = limitSwitch;
         this.limitSwitch.setMode(DigitalChannel.Mode.INPUT);
-        //this.useSmooth = false; // Uncomment if smooth movement is not desired.
+        this.useSmooth = false; // Comment this line if smooth movement is desired.
         this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
@@ -32,26 +30,27 @@ public class BoundedMotor extends EncodedMotor {
      * Will return once the motor has reached the lower limit.
      */
     public void init() {
-        // Clockwise is extend. Counter-clockwise is retract.
         resetEncoder();
-        boolean switchPressed = getSwitchState();
+        boolean switchPressed = getSwitchPressed();
 
         if (switchPressed) { return; }
 
         // Lower the motor and check for the switch press.
-        this.setTarget(-UPPER_BOUND);
+        setTarget(-UPPER_BOUND);
         while (!switchPressed) {
-            this.setPower(-1);
-            switchPressed = getSwitchState();
+            setPower(-1);
+            switchPressed = getSwitchPressed();
         }
         resetEncoder();
     }
 
     @Override
-    public void setTarget(double target) {
-        this.tarPos = Range.clip(target, LOWER_BOUND, UPPER_BOUND);
-        this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        this.smoothMove = new SmoothMovement(Math.abs(target));
+    public void setTarget(int target) {
+        int targetOffset = Range.clip(target, LOWER_BOUND, UPPER_BOUND);
+        // Sanity check that the target needs to be set.
+        if (motor.getTargetPosition() == targetOffset) { return; }
+        motor.setTargetPosition(targetOffset);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     /**
@@ -66,10 +65,9 @@ public class BoundedMotor extends EncodedMotor {
      * @param wait Whether to return when complete or immediately.
      */
     public void extend(boolean wait) {
-        this.setTarget(UPPER_BOUND);
+        setTarget(UPPER_BOUND);
 
         if (!wait) {
-            useSmooth = false;
             moveToTarget(1);
             return;
         }
@@ -92,10 +90,9 @@ public class BoundedMotor extends EncodedMotor {
      * @param wait Whether to return when complete or immediately.
      */
     public void retract(boolean wait) {
-        this.setTarget(LOWER_BOUND);
+        setTarget(LOWER_BOUND);
 
         if (!wait) {
-            useSmooth = false;
             moveToTarget(1);
             return;
         }
@@ -106,7 +103,7 @@ public class BoundedMotor extends EncodedMotor {
         }
     }
 
-    public boolean getSwitchState() {
-        return limitSwitch.getState();
+    public boolean getSwitchPressed() {
+        return !limitSwitch.getState();
     }
 }

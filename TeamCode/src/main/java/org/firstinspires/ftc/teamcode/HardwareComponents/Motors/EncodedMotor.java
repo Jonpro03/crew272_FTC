@@ -6,7 +6,6 @@ import org.firstinspires.ftc.teamcode.Movement.SmoothMovement;
 
 public class EncodedMotor extends Motor {
 
-    protected double tarPos = 0;
     protected SmoothMovement smoothMove;
 
     /**
@@ -20,7 +19,7 @@ public class EncodedMotor extends Motor {
      */
     public EncodedMotor(DcMotor tetrixMotor) {
         super(tetrixMotor);
-        this.resetEncoder();
+        resetEncoder();
     }
 
     /**
@@ -34,11 +33,10 @@ public class EncodedMotor extends Motor {
      * Set the target destination for the next movement.
      * @param target Number of encoder ticks to the next target.
      */
-    public void setTarget(double target) {
-        resetEncoder();
-        tarPos = target + motor.getCurrentPosition();
+    public void setTarget(int target) {
+        motor.setTargetPosition(target + motor.getCurrentPosition());
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        smoothMove = new SmoothMovement(Math.abs(target));
+
     }
 
     /**
@@ -49,17 +47,22 @@ public class EncodedMotor extends Motor {
      * @return Whether target has been reached.
      */
     public boolean moveToTarget(double powerDecimal) {
-        double power = powerDecimal *
-                this.smoothMove.SmoothMoveFactor(this.motor.getCurrentPosition());
-        this.setPower(useSmooth ? power : powerDecimal);
-        return !this.motor.isBusy();
+        if (useSmooth) {
+            smoothMove = new SmoothMovement(Math.abs(motor.getTargetPosition()));
+            double power = powerDecimal *
+                    smoothMove.SmoothMoveFactor(motor.getCurrentPosition());
+            setPower(power);
+        } else {
+            setPower(powerDecimal);
+        }
+        return !motor.isBusy();
     }
 
     /**
      * Stop all movement and reset the encoders.
      */
     public void stop() {
-        this.motor.setPower(0);
+        motor.setPower(0);
         resetEncoder();
     }
 }
