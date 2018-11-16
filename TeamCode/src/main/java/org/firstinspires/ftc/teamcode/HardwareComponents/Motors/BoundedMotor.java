@@ -20,9 +20,8 @@ public class BoundedMotor extends EncodedMotor {
     public BoundedMotor(DcMotor tetrixMotor, DigitalChannel limitSwitch) {
         super(tetrixMotor);
         this.limitSwitch = limitSwitch;
-        this.limitSwitch.setMode(DigitalChannel.Mode.INPUT);
-        this.useSmooth = false; // Comment this line if smooth movement is desired.
-        this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     /**
@@ -46,6 +45,7 @@ public class BoundedMotor extends EncodedMotor {
         }
         stop();
         resetEncoder();
+        useSmooth = true;
     }
 
     @Override

@@ -29,16 +29,20 @@ public class Motor {
      */
     public void setPower(double powerTarget) {
         //Sanity Checks
-        if (powerTarget == 0 || motor.getPower() == powerTarget) { return; }
+        if (motor.getPower() == powerTarget) { return; }
+
+        if (powerTarget == 0) {
+            motor.setPower(powerTarget);
+            return;
+        }
 
         double pow;
-
         if (powerTarget > 0) {
-            pow = Range.clip(powerTarget, this.minPower,1.0);
+            pow = Range.clip(powerTarget, minPower,1.0);
         } else {
-            pow = Range.clip(powerTarget, -1.0, -this.minPower);
+            pow = Range.clip(powerTarget, -1.0, -minPower);
         }
-        this.motor.setPower(pow);
+        motor.setPower(pow);
     }
 
     public double getPower() {
@@ -49,6 +53,6 @@ public class Motor {
      * Set the motor to run in reverse mode.
      */
     public void setReverse(){
-        this.motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 }

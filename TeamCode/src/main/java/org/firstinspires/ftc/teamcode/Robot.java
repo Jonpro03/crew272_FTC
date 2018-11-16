@@ -26,7 +26,6 @@ public class Robot {
                 hwmap.get(DcMotor.class, "right_drive"),
                 isDriverControl);
 
-        // Clockwise is extend. Counter-clockwise is retract.
         screwLift = new BoundedMotor(hwmap.get(DcMotor.class, "screw_drive"),
                 hwmap.get(DigitalChannel.class, "limit_switch"));
         screwLift.setReverse();
@@ -56,7 +55,7 @@ public class Robot {
         scoop.init();
 
         // Initialize screwLift
-        //screwLift.init();
+        screwLift.init();
 
         // Initialize Color Sensor
         if (colorSensor instanceof SwitchableLight) {

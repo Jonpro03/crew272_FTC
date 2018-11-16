@@ -24,7 +24,7 @@ public class SmoothMovement {
             factor = position / RAMP_UP_DURATION;
         }
 
-        double rampDownPoint = this.totalDuration - RAMP_DOWN_DURATION;
+        double rampDownPoint = totalDuration - RAMP_DOWN_DURATION;
         if (position > rampDownPoint) {
             double curPosInRampDown = position - rampDownPoint;
             factor = RAMP_DOWN_DURATION / curPosInRampDown;

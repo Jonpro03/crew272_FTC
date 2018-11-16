@@ -12,6 +12,10 @@ public class AutonomousDepot1 extends LinearOpMode {
     private Robot robot;
     private boolean goldFound = false;
 
+    public AutonomousDepot1() {
+        msStuckDetectInit = 15000;
+    }
+
     public void initialize() {
         robot = new Robot(hardwareMap, false);
         robot.init();

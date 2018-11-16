@@ -15,6 +15,10 @@ public class DriverControl extends OpMode {
 
     static final float SCOOP_SENSITIVITY_FACTOR = 0.03f;
 
+    public DriverControl() {
+        msStuckDetectInit = 15000;
+    }
+
     @Override
     public void init() {
         robot = new Robot(hardwareMap, true);
@@ -27,7 +31,6 @@ public class DriverControl extends OpMode {
 
     @Override
     public void start() {
-        robot.screwLift.init();
         runtime.reset();
     }
 

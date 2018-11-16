@@ -35,14 +35,14 @@ public class BoundedServo {
      * Move the servo to the close position.
      */
     public void close() {
-        gripperServo.setPosition(this.closePos);
+        gripperServo.setPosition(closePos);
     }
 
     /**
      * Move the servo to the open position.
      */
     public void open() {
-        gripperServo.setPosition(this.openPos);
+        gripperServo.setPosition(openPos);
     }
 
     /**

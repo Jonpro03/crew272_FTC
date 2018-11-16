@@ -12,6 +12,10 @@ public class AutonomousCrater1 extends LinearOpMode {
     private Robot robot;
     private boolean goldFound = false;
 
+    public AutonomousCrater1() {
+        msStuckDetectInit = 15000;
+    }
+
     public void initialize() {
         robot = new Robot(hardwareMap, false);
         robot.init();

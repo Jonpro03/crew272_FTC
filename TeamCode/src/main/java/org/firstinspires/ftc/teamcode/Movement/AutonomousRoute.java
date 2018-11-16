@@ -13,6 +13,6 @@ public class AutonomousRoute {
 
     public AutonomousRoute(List<? extends Route> routes) {
         routeItems = routes;
-        this.pauseMS = 100;
+        pauseMS = 100;
     }
 }

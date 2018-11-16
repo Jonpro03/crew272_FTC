@@ -10,7 +10,7 @@ public class Rotation extends Route {
 
         double arc = Math.toRadians(angle) * (WHEELBASE_IN / 2) * WHEEL_SLIP_CORRECTION_FACTOR;
 
-        this.leftIn = angle > 0 ? arc : -arc;
-        this.rightIn = angle > 0 ? -arc : arc;
+        leftIn = angle > 0 ? arc : -arc;
+        rightIn = angle > 0 ? -arc : arc;
     }
 }
