@@ -26,25 +26,31 @@ public class Roll extends LinearOpMode {
 
         initialize();
         waitForStart();
+        sleep(1000);
+
+        robot.drivetrain.leftDriveMotor.useSmooth = false;
+        robot.drivetrain.rightDriveMotor.useSmooth = false;
         SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, robot.soundId);
         robot.screwLift.extend(false);
-        sleep(2000);
+        sleep(2500);
         robot.screwLift.retract(false);
-        sleep(2000);
-        robot.drivetrain.driveRoute(new Rotation(90, 0.5, 3));
-        robot.drivetrain.driveRoute(new StraightRoute(-4, 0.5, 1));
-        robot.drivetrain.driveRoute(new Rotation(-3, 0.5, 1));
-        robot.drivetrain.driveRoute(new Rotation(6, 0.5, 1));
-        robot.drivetrain.driveRoute(new Rotation(-6, 0.5, 1));
-        robot.drivetrain.driveRoute(new Rotation(3, 0.5, 1));
+        sleep(2500);
+        robot.drivetrain.driveRoute(new Rotation(90, 0.2, 3));
+        robot.drivetrain.driveRoute(new StraightRoute(-4, 0.1, 1));
+        robot.drivetrain.driveRoute(new Rotation(-30, 0.2, 1));
+        robot.drivetrain.driveRoute(new Rotation(60, 0.2, 1));
+        robot.drivetrain.driveRoute(new Rotation(-60, 0.2, 1));
+        robot.drivetrain.driveRoute(new Rotation(30, 0.2, 1));
+        robot.latch.open();
+        sleep(1000);
+        robot.latch.close();
+        sleep(1000);
         robot.scoop.open();
+        sleep(1000);
         robot.scoop.close();
-        robot.scoop.open();
-        robot.scoop.close();
-        robot.drivetrain.driveRoute(new Route(0, 4, 0.5, 2));
-        robot.drivetrain.driveRoute(new Route(4, 0, 0.5, 2));
-
-
+        sleep(1000);
+        robot.drivetrain.driveRoute(new Route(0, 4, 0.3, 2));
+        robot.drivetrain.driveRoute(new Route(4, 0, 0.3, 2));
     }
 }
 

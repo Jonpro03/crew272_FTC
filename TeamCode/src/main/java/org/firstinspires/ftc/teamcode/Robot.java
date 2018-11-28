@@ -38,7 +38,9 @@ public class Robot {
         scoop = new BoundedServo(hwmap.get(Servo.class, "scoop"));
         scoop.setReverse();
         scoop.openPos = 0.7;
-        scoop.closePos = 0.95;
+        scoop.closePos = 1.0;
+        scoop.lowerLimit = 0.5;
+        scoop.upperLimit = scoop.closePos;
         scoop.initPos = isDriverControl ? scoop.openPos : scoop.closePos;
 
         colorSensor = hwmap.get(NormalizedColorSensor.class, "color_sensor");
@@ -59,7 +61,7 @@ public class Robot {
 
         // Initialize Color Sensor
         if (colorSensor instanceof SwitchableLight) {
-            ((SwitchableLight) colorSensor).enableLight(true);
+            ((SwitchableLight) colorSensor).enableLight(false);
         }
     }
 

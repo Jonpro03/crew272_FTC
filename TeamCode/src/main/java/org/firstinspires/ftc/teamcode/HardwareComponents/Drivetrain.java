@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.HardwareComponents;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Movement.AutonomousRoute;
 import org.firstinspires.ftc.teamcode.HardwareComponents.Motors.EncodedMotor;
 import org.firstinspires.ftc.teamcode.Movement.Route;
@@ -12,8 +13,8 @@ import static android.os.SystemClock.sleep;
 
 public class Drivetrain {
     static final double ENCODER_TICKS = 1440;
-    static final double GEAR_REDUCTION = 2.0;
-    static final double WHEEL_DIAMETER = 5.0;
+    static final double GEAR_REDUCTION = 0.66;
+    static final double WHEEL_DIAMETER = 4.5;
     static final double TICKS_PER_INCH = (ENCODER_TICKS * GEAR_REDUCTION) / (WHEEL_DIAMETER * Math.PI);
     static final int SMOOTHING_INTERVAL = 10;
 
@@ -23,7 +24,6 @@ public class Drivetrain {
 
     private ElapsedTime runtime = new ElapsedTime();
     private double intervalCounter = 0;
-
 
     /**
      * drivetrain consists of left and right drive motors.

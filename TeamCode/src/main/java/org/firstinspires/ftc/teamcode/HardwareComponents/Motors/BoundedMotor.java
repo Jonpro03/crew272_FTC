@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 public class BoundedMotor extends EncodedMotor {
 
     static final int LOWER_BOUND = 0;
-    static final int UPPER_BOUND = 32768;
+    static final int UPPER_BOUND = 27000 ;
 
     private final DigitalChannel limitSwitch;
 

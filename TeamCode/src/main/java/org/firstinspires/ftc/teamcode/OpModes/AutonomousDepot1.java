@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.teamcode.Robot;
 
@@ -19,7 +20,8 @@ public class AutonomousDepot1 extends LinearOpMode {
     public void initialize() {
         robot = new Robot(hardwareMap, false);
         robot.init();
-        telemetry.addData("Status", "Initialized");
+        robot.drivetrain.leftDriveMotor.useSmooth = false;
+        robot.drivetrain.rightDriveMotor.useSmooth = false;
     }
 
     @Override
@@ -30,10 +32,9 @@ public class AutonomousDepot1 extends LinearOpMode {
 
         robot.screwLift.extend();
         robot.latch.open();
-        sleep(500);
+        sleep(800);
         robot.screwLift.retract(false);
         robot.drivetrain.driveRoute(Routes.DEPARTURE);
-
         checkGoldOre();
         robot.drivetrain.driveRoute(Routes.MOVE_TO_NEXT_ORE);
         if (!goldFound)
@@ -53,6 +54,7 @@ public class AutonomousDepot1 extends LinearOpMode {
     }
 
     private void checkGoldOre() {
+        sleep(100);
         NormalizedRGBA colors;
         colors = robot.colorSensor.getNormalizedColors();
         goldFound = colors.blue < colors.red && colors.blue < colors.green;

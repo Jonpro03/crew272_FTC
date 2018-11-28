@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -52,6 +53,7 @@ public class DriverControl extends OpMode {
          *  latch close - B
          */
 
+
         // Accept inputs for driving
         double throttleInput = 0;
         throttleInput += gamepad1.right_trigger;
@@ -79,7 +81,9 @@ public class DriverControl extends OpMode {
 
         // Accept inputs for screw drive and latch
         if (gamepad2.dpad_up) {
-            robot.screwLift.retract(false);
+            robot.screwLift.setTarget(17000);
+            robot.screwLift.moveToTarget(1);
+            //robot.screwLift.retract(false);
         }
         if (gamepad2.dpad_down) {
             robot.screwLift.extend(false);
@@ -92,6 +96,12 @@ public class DriverControl extends OpMode {
             robot.latch.close();
         }
 
+        NormalizedRGBA colors = robot.colorSensor.getNormalizedColors();
+        telemetry.addLine()
+                .addData("a", "%.3f", colors.alpha)
+                .addData("r", "%.3f", colors.red)
+                .addData("g", "%.3f", colors.green)
+                .addData("b", "%.3f", colors.blue);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " +
