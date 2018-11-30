@@ -43,14 +43,21 @@ public class DriverControl extends OpMode {
          *  Forward - Right Trigger
          *  Reverse - Left Trigger
          *  Turn - Left Stick X Axis
+         *  ColorArm Extend - X
+         *  ColorArm Retract - Y
+         *  MarkerArm Extend - A
+         *  MarkerArm Retract - B
+         *
          *
          *  Gamepad 2:
          *  scoop open - Right Trigger or Right Bumper
          *  scoop close = Left Trigger or Left Bumper
-         *  screwLift retract - DPad Up
-         *  screwLift extend - DPad Down
-         *  latch open - A
+         *  screwLift retract - DPad Down
+         *  screwLift extend - DPad Up
+         *  latch open - Y
          *  latch close - B
+         *  twisty in - X
+         *  twisty out - A
          */
 
 
@@ -80,20 +87,43 @@ public class DriverControl extends OpMode {
         }
 
         // Accept inputs for screw drive and latch
-        if (gamepad2.dpad_up) {
-            robot.screwLift.setTarget(17000);
+        if (gamepad2.dpad_down) {
+            robot.screwLift.setTarget(robot.screwLift.upperBound / 2);
             robot.screwLift.moveToTarget(1);
             //robot.screwLift.retract(false);
         }
-        if (gamepad2.dpad_down) {
+        if (gamepad2.dpad_up) {
             robot.screwLift.extend(false);
         }
 
-        if (gamepad2.a) {
+        if (gamepad2.y) {
             robot.latch.open();
         }
         if (gamepad2.b) {
             robot.latch.close();
+        }
+
+        // Accept inputs for twisty motor
+        if (gamepad2.x) {
+            robot.twisty.moveForward(0.5);
+        } else if (gamepad2.a) {
+            robot.twisty.moveBackwards(0.5);
+        } else {
+            robot.twisty.stop();
+        }
+
+        // Accept inputs for testing the autonomous mode servos
+        if (gamepad1.x) {
+            robot.colorArm.open();
+        }
+        if (gamepad1.y) {
+            robot.colorArm.close();
+        }
+        if (gamepad1.a) {
+            robot.markerArm.open();
+        }
+        if (gamepad1.b) {
+            robot.markerArm.close();
         }
 
         NormalizedRGBA colors = robot.colorSensor.getNormalizedColors();

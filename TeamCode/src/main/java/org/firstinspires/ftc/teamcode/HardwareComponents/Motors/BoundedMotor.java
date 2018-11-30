@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 public class BoundedMotor extends EncodedMotor {
 
     static final int LOWER_BOUND = 0;
-    static final int UPPER_BOUND = 27000 ;
+    public int upperBound;
 
     private final DigitalChannel limitSwitch;
 
@@ -17,8 +17,9 @@ public class BoundedMotor extends EncodedMotor {
      * @param tetrixMotor DcMotor.
      * @param limitSwitch DigitialChannel for the limit switch.
      */
-    public BoundedMotor(DcMotor tetrixMotor, DigitalChannel limitSwitch) {
+    public BoundedMotor(DcMotor tetrixMotor, DigitalChannel limitSwitch, int upperBound) {
         super(tetrixMotor);
+        this.upperBound = upperBound;
         this.limitSwitch = limitSwitch;
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -36,21 +37,22 @@ public class BoundedMotor extends EncodedMotor {
         if (switchPressed) { return; }
 
         // Lower the motor and check for the switch press.
-        motor.setTargetPosition(-UPPER_BOUND);
+        motor.setTargetPosition(-upperBound);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        moveToTarget(0.8);
+        moveToTarget(0.2);
         while (!switchPressed) {
             switchPressed = getSwitchPressed();
         }
         stop();
+
         resetEncoder();
         useSmooth = true;
     }
 
     @Override
     public void setTarget(int target) {
-        int targetOffset = Range.clip(target, LOWER_BOUND, UPPER_BOUND);
+        int targetOffset = Range.clip(target, LOWER_BOUND, upperBound);
         // Sanity check that the target needs to be set.
         if (motor.getTargetPosition() == targetOffset) { return; }
         motor.setTargetPosition(targetOffset);
@@ -69,7 +71,7 @@ public class BoundedMotor extends EncodedMotor {
      * @param wait Whether to return when complete or immediately.
      */
     public void extend(boolean wait) {
-        setTarget(UPPER_BOUND);
+        setTarget(upperBound);
 
         if (!wait) {
             moveToTarget(1);

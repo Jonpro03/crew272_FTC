@@ -9,6 +9,7 @@ public class Motor {
 
     public final DcMotor motor;
     public double minPower = 0;
+    public double maxPowerFactor = 1;
 
     /**
      * Base DcMotor class.
@@ -38,9 +39,9 @@ public class Motor {
 
         double pow;
         if (powerTarget > 0) {
-            pow = Range.clip(powerTarget, minPower,1.0);
+            pow = Range.clip(powerTarget * maxPowerFactor, minPower,1.0);
         } else {
-            pow = Range.clip(powerTarget, -1.0, -minPower);
+            pow = Range.clip(powerTarget * maxPowerFactor, -1.0, -minPower);
         }
         motor.setPower(pow);
     }

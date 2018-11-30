@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-import com.qualcomm.robotcore.hardware.SwitchableLight;
 
+import org.firstinspires.ftc.teamcode.Movement.Rotation;
 import org.firstinspires.ftc.teamcode.Robot;
 
 
@@ -14,7 +14,7 @@ public class AutonomousCrater1 extends LinearOpMode {
     private boolean goldFound = false;
 
     public AutonomousCrater1() {
-        msStuckDetectInit = 15000;
+        msStuckDetectInit = 18000;
     }
 
     public void initialize() {
@@ -26,13 +26,26 @@ public class AutonomousCrater1 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
         initialize();
         waitForStart();
 
-        robot.screwLift.extend();
+        //robot.screwLift.extend();
+        // Now we want to go half way down and wait a few seconds for the robot to line itself up
+        robot.screwLift.setTarget(robot.screwLift.upperBound / 2);
+        while (!robot.screwLift.moveToTarget(0.3)) // Move slowly to reduce the shock of the descent
+        {
+            telemetry.addData("Encoder Pos", robot.screwLift.motor.getCurrentPosition());
+        }
+        sleep(2000); // wait for the robot to line itself up
+
+        // Finish going down the rest of the way
+        robot.screwLift.extend(true);
+
+        // Detach
         robot.latch.open();
-        sleep(800);
+        sleep(1000);
+
+        // Tell the screw lift to retract and take off toward the first ore.
         robot.screwLift.retract(false);
         robot.drivetrain.driveRoute(Routes.DEPARTURE);
         checkGoldOre();
@@ -43,22 +56,30 @@ public class AutonomousCrater1 extends LinearOpMode {
         if (!goldFound)
             checkGoldOre();
 
+        // Move from the last ore to the depot.
         robot.drivetrain.driveRoute(Routes.CRATER_SIDE_ORE_TO_DEPOT);
 
-        robot.scoop.open();
+        // Team marker is on the left side of the robot now.
+        // Turn right 90* so that we drop it into the depot,
+        // then turn back before going to the crater.
+        robot.drivetrain.driveRoute(new Rotation(90, 0.5, 2));
+        robot.markerArm.open();
         sleep(1000);
-        robot.scoop.close();
+        robot.markerArm.close();
+        robot.drivetrain.driveRoute(new Rotation(90, 0.5, 2));
 
-        robot.drivetrain.driveRoute(Routes.REVERSE_INTO_CRATER);
-
+        // We've dropped our team marker, back straight up into the crater.
+        robot.drivetrain.driveRoute(Routes.DRIVE_TO_CRATER);
     }
 
     private void checkGoldOre() {
-        sleep(100);
+        robot.colorArm.open();
+        sleep(500);
         NormalizedRGBA colors;
         colors = robot.colorSensor.getNormalizedColors();
         goldFound = colors.blue < colors.red && colors.blue < colors.green;
         if (goldFound)
             robot.drivetrain.driveRoute(Routes.ORE_FOUND);
+        robot.colorArm.close();
     }
 }
