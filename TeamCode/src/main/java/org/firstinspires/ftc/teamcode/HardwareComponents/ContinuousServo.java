@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.HardwareComponents;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class ContinuousServo {
     protected final CRServo servo;
@@ -9,6 +10,10 @@ public class ContinuousServo {
     public ContinuousServo(CRServo servo) {
         this.servo = servo;
         this.servo.setPower(STOP_POW);
+    }
+
+    public void setReverse() {
+        servo.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void moveForward(double speed) {

@@ -62,11 +62,11 @@ public class AutonomousDepot1 extends LinearOpMode {
         // Team marker is on the left side of the robot now.
         // Turn right 90* so that we drop it into the depot,
         // then turn back before going to the crater.
-        robot.drivetrain.driveRoute(new Rotation(90, 0.5, 2));
+        robot.drivetrain.driveRoute(new Rotation(85, 0.5, 2));
         robot.markerArm.open();
         sleep(1000);
         robot.markerArm.close();
-        robot.drivetrain.driveRoute(new Rotation(90, 0.5, 2));
+        robot.drivetrain.driveRoute(new Rotation(85, 0.5, 2));
 
         // We've dropped our team marker, back straight up into the crater.
         robot.drivetrain.driveRoute(Routes.DRIVE_TO_CRATER);

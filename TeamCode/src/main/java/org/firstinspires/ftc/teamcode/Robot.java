@@ -33,7 +33,7 @@ public class Robot {
 
         screwLift = new BoundedMotor(hwmap.get(DcMotor.class, "screw_drive"),
                 hwmap.get(DigitalChannel.class, "limit_switch"),
-                3150);
+                2580);
         screwLift.setReverse();
         screwLift.maxPowerFactor = 0.5;
 
