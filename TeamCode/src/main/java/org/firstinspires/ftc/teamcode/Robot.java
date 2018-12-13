@@ -33,7 +33,7 @@ public class Robot {
 
         screwLift = new BoundedMotor(hwmap.get(DcMotor.class, "screw_drive"),
                 hwmap.get(DigitalChannel.class, "limit_switch"),
-                2580);
+                2400);
         screwLift.setReverse();
         screwLift.maxPowerFactor = 0.5;
 
@@ -45,12 +45,12 @@ public class Robot {
         latch.initPos = isDriverControl ? latch.openPos : latch.closePos;
 
         scoop = new BoundedServo(hwmap.get(Servo.class, "scoop"));
-        scoop.setReverse();
-        scoop.openPos = 0.5;
-        scoop.closePos = 0.8;
-        scoop.lowerLimit = 0.2;
-        scoop.upperLimit = scoop.closePos;
-        scoop.initPos = isDriverControl ? scoop.openPos : scoop.closePos;
+        //scoop.setReverse();
+        scoop.openPos = 0.65;
+        scoop.closePos = 0.3;
+        scoop.lowerLimit = 0.0;
+        scoop.upperLimit = scoop.openPos;
+        scoop.initPos = scoop.closePos;
 
         colorSensor = hwmap.get(NormalizedColorSensor.class, "color_sensor");
         soundId = hwmap.appContext.getResources().getIdentifier("roll", "raw", hwmap.appContext.getPackageName());
