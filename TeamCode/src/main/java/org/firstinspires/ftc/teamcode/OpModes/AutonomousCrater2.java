@@ -9,13 +9,13 @@ import org.firstinspires.ftc.teamcode.Movement.StraightRoute;
 import org.firstinspires.ftc.teamcode.Robot;
 
 
-@Autonomous(name="Autonomous: Depot", group="Autonomous")
-public class AutonomousDepot1 extends LinearOpMode {
+@Autonomous(name="Autonomous: Crater2", group="Autonomous")
+public class AutonomousCrater2 extends LinearOpMode {
     private Robot robot;
     private boolean goldFound = false;
 
-    public AutonomousDepot1() {
-        msStuckDetectInit = 15000;
+    public AutonomousCrater2() {
+        msStuckDetectInit = 18000;
     }
 
     public void initialize() {
@@ -37,7 +37,7 @@ public class AutonomousDepot1 extends LinearOpMode {
         {
             telemetry.addData("Encoder Pos", robot.screwLift.motor.getCurrentPosition());
         }
-        sleep(1000); // wait for the robot to line itself up
+        sleep(2000); // wait for the robot to line itself up
 
         // Finish going down the rest of the way
         robot.screwLift.extend(true);
@@ -48,31 +48,7 @@ public class AutonomousDepot1 extends LinearOpMode {
 
         // Tell the screw lift to retract and take off toward the first ore.
         robot.screwLift.retract(false);
-        robot.drivetrain.driveRoute(Routes.DEPARTURE);
-        checkGoldOre();
-        robot.drivetrain.driveRoute(Routes.MOVE_TO_NEXT_ORE);
-        if (!goldFound)
-            checkGoldOre();
-        robot.drivetrain.driveRoute(Routes.MOVE_TO_NEXT_ORE);
-        if (!goldFound)
-            checkGoldOre();
-
-        // Move from the last ore to the depot.
-        robot.drivetrain.driveRoute(Routes.DEPOT_SIDE_ORE_TO_DEPOT);
-
-        // Team marker is on the left side of the robot now.
-        // Turn right 90* so that we drop it into the depot,
-        // then turn back before going to the crater.
-        robot.drivetrain.driveRoute(new Rotation(30, 0.3, 3));
-        robot.markerArm.open();
-        sleep(1000);
-        robot.markerArm.close();
-        robot.drivetrain.driveRoute(new Rotation(-38, 0.3, 3));
-        robot.drivetrain.driveRoute((new StraightRoute(-112, 0.9, 5)));
-
-
-        // We've dropped our team marker, back straight up into the crater.
-        //robot.drivetrain.driveRoute(Routes.DRIVE_TO_CRATER);
+        robot.drivetrain.driveRoute(new StraightRoute(42, 0.7, 4));
     }
 
     private void checkGoldOre() {

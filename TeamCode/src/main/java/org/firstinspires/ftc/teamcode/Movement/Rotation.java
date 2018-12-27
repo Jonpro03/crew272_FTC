@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.Movement;
 public class Rotation extends Route {
 
     static final double WHEELBASE_IN = 14.5;
-    static final double WHEEL_SLIP_CORRECTION_FACTOR = 1.9;
+    static final double WHEEL_SLIP_CORRECTION_FACTOR = 1.91;
 
     public Rotation(double angle, double speed, double timeout) {
         super(0, 0, speed, timeout);

@@ -29,6 +29,7 @@ public class Robot {
     public Robot(HardwareMap hwmap, boolean isDriverControl) {
         drivetrain = new Drivetrain(hwmap.get(DcMotor.class, "left_drive"),
                 hwmap.get(DcMotor.class, "right_drive"),
+
                 isDriverControl);
 
         screwLift = new BoundedMotor(hwmap.get(DcMotor.class, "screw_drive"),
@@ -46,8 +47,8 @@ public class Robot {
 
         scoop = new BoundedServo(hwmap.get(Servo.class, "scoop"));
         //scoop.setReverse();
-        scoop.openPos = 0.65;
-        scoop.closePos = 0.3;
+        scoop.openPos = 0.55;
+        scoop.closePos = 0;
         scoop.lowerLimit = 0.0;
         scoop.upperLimit = scoop.openPos;
         scoop.initPos = scoop.closePos;
