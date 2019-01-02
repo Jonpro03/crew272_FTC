@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.Movement.Utility;
 
 import java.util.List;
 
@@ -45,17 +46,17 @@ public class CameraOreDetection {
     public int goldDirection() {
         List<Recognition> recognitions = tfod.getRecognitions();
         if (recognitions == null || recognitions.size() == 0) {
-            return 0;
+            return Utility.STRAIGHT;
         }
         for (Recognition r : recognitions) {
             if (r.getLabel().equals(LABEL_GOLD_MINERAL)) {
                 int x = (int) r.getLeft();
-                if (x > 320) { return 1; }
-                if (x < 280) { return -1; }
-                return 0;
+                if (x > 320) { return Utility.RIGHT; }
+                if (x < 280) { return Utility.LEFT; }
+                return Utility.STRAIGHT;
             }
         }
-        return 0;
+        return Utility.STRAIGHT;
     }
 
     public void shutDown() {

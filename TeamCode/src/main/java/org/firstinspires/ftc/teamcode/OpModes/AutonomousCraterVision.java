@@ -4,16 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.HardwareComponents.Camera.CameraNavTargets;
 import org.firstinspires.ftc.teamcode.HardwareComponents.Camera.CameraOreDetection;
 import org.firstinspires.ftc.teamcode.HardwareComponents.Camera.VuforiaCam;
+import org.firstinspires.ftc.teamcode.Movement.Models.Point2D;
 import org.firstinspires.ftc.teamcode.Movement.Rotation;
 import org.firstinspires.ftc.teamcode.Movement.StraightRoute;
 import org.firstinspires.ftc.teamcode.Movement.Utility;
-import org.firstinspires.ftc.teamcode.Movement.Vector;
+import org.firstinspires.ftc.teamcode.Movement.Models.PolarCoordinate;
 import org.firstinspires.ftc.teamcode.Robot;
 
 
@@ -73,9 +71,9 @@ public class AutonomousCraterVision extends LinearOpMode {
         robot.drivetrain.drive(0, 0);
 
         // We see an ore, so now we just need to line up with it.
-        int correctionDirection = -1;
+        int correctionDirection = Utility.LEFT;
         // Todo: add fault timer.
-        while (correctionDirection != 0) {
+        while (correctionDirection != Utility.STRAIGHT) {
             correctionDirection = oreDetect.goldDirection();
             robot.drivetrain.drive(0.3 * correctionDirection, -0.3 * correctionDirection);
         }
@@ -92,6 +90,8 @@ public class AutonomousCraterVision extends LinearOpMode {
         // red target location = 0, -48
         double targetX = 0;
         double targetY = -48;
+
+        Point2D target = new Point2D(0, -48);
 
         // use the camera to straighten out.
         CameraNavTargets navTargets = new CameraNavTargets(vuCam);
@@ -113,11 +113,7 @@ public class AutonomousCraterVision extends LinearOpMode {
             return;
         }
 
-        Vector destination = Utility.calcPath(navTargets.lastX,
-                navTargets.lastY,
-                navTargets.lastRotation,
-                targetX,
-                targetY);
+        PolarCoordinate destination = Utility.calcPolarCoordinate(navTargets.lastKnownLocation, target);
 
         // Rotate to point at destination
         robot.drivetrain.driveRoute(new Rotation(destination.angle, 0.4, 2));
