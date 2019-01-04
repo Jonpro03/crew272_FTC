@@ -257,6 +257,9 @@ public class AutonomousVision extends LinearOpMode {
         robot.drivetrain.driveRoute(new Rotation(-30, 0.3, 2));
         robot.twisty.stop();
 
+        robot.drivetrain.driveRoute(new StraightRoute(-8, 0.8, 2));
+        robot.drivetrain.driveRoute(new StraightRoute(8, 0.5, 2));
+
         // Drive into crater
         robot.drivetrain.driveRoute(new StraightRoute(-128, 0.8, 8));
 
