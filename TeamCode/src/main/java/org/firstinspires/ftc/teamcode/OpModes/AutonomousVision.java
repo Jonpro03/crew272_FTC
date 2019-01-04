@@ -193,6 +193,7 @@ public class AutonomousVision extends LinearOpMode {
         telemetry.addLine("l: " + destination.length);
         telemetry.addLine("a: " + destination.angle);
         telemetry.addLine("h: " + newHeading);
+        telemetry.addLine(isCraterSide ? "Crater Side" : "Depot Side");
         telemetry.update();
 
         // Move to destination.
@@ -244,6 +245,9 @@ public class AutonomousVision extends LinearOpMode {
         // Rotate to drop the marker.
         robot.drivetrain.driveRoute(new Rotation(30, 0.3, 2));
 
+        // Drop the mineral we're (hopefully) holding.
+        robot.twisty.moveBackwards(1);
+
         // Drop it
         robot.markerArm.open();
         sleep(1000);
@@ -251,6 +255,7 @@ public class AutonomousVision extends LinearOpMode {
 
         // Straighten out
         robot.drivetrain.driveRoute(new Rotation(-30, 0.3, 2));
+        robot.twisty.stop();
 
         // Drive into crater
         robot.drivetrain.driveRoute(new StraightRoute(-128, 0.8, 8));
