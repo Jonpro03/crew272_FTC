@@ -90,6 +90,13 @@ public class Drivetrain {
      * @param right Right side power.
      */
     public void drive(double left, double right) {
+        if (left == 0 && right == 0) {
+            currentLeftPower = 0;
+            currentRightPower = 0;
+            leftDriveMotor.stop();
+            rightDriveMotor.stop();
+            return;
+        }
         // Average current and desired power to get a smoothing average.
         if (intervalCounter % SMOOTHING_INTERVAL == 0) {
             currentLeftPower = (currentLeftPower + currentLeftPower + left) / 3.0;
