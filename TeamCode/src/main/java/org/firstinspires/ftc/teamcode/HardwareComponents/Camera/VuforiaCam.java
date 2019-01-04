@@ -35,6 +35,12 @@ public class VuforiaCam {
 
     public VuforiaLocalizer vuforia;
 
+    public static final String BACK_WALL_VUMARK_NAME = "Back-Space";
+    public static final String BLUE_WALL_VUMARK_NAME = "Blue-Rover";
+    public static final String RED_WALL_VUMARK_NAME = "Red-Footprint";
+    public static final String FRONT_WALL_VUMARK_NAME = "Front-Craters";
+
+
     public VuforiaCam(HardwareMap hwMap) {
         int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -46,13 +52,13 @@ public class VuforiaCam {
 
         VuforiaTrackables targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
         VuforiaTrackable blueRover = targetsRoverRuckus.get(0);
-        blueRover.setName("Blue-Rover");
+        blueRover.setName(BLUE_WALL_VUMARK_NAME);
         VuforiaTrackable redFootprint = targetsRoverRuckus.get(1);
-        redFootprint.setName("Red-Footprint");
+        redFootprint.setName(RED_WALL_VUMARK_NAME);
         VuforiaTrackable frontCraters = targetsRoverRuckus.get(2);
-        frontCraters.setName("Front-Craters");
+        frontCraters.setName(FRONT_WALL_VUMARK_NAME);
         VuforiaTrackable backSpace = targetsRoverRuckus.get(3);
-        backSpace.setName("Back-Space");
+        backSpace.setName(BACK_WALL_VUMARK_NAME);
 
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
         allTrackables = new ArrayList<VuforiaTrackable>();
@@ -90,3 +96,4 @@ public class VuforiaCam {
         targetsRoverRuckus.activate();
     }
 }
+

@@ -19,6 +19,7 @@ public class CameraNavTargets {
     private static final float mmPerInch        = 25.4f;
     private OpenGLMatrix lastLocation = null;
     public Location lastKnownLocation = new Location(new Point2D(0, 0), 0);
+    public String lastVuMarkName = "";
 
     private boolean targetVisible = false;
 
@@ -35,6 +36,7 @@ public class CameraNavTargets {
             if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
                 telem.addData("Visible Target", trackable.getName());
                 targetVisible = true;
+                lastVuMarkName = trackable.getName();
 
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
                 if (robotLocationTransform != null) {

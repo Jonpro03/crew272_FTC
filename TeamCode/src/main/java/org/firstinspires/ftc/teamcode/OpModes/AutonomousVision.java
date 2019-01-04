@@ -14,13 +14,14 @@ import org.firstinspires.ftc.teamcode.Movement.Models.PolarCoordinate;
 import org.firstinspires.ftc.teamcode.Robot;
 
 
-@Autonomous(name="Autonomous: Crater Vision", group="Autonomous")
-public class AutonomousCraterVision extends LinearOpMode {
+@Autonomous(name="Autonomous: Vision", group="Autonomous")
+public class AutonomousVision extends LinearOpMode {
     private Robot robot;
     private Point2D alignmentTargetCoords = new Point2D(72-14,0); // 14" from the wall, in front of the picture.
     private double alignmentTargetHeading = 90;
+    private boolean isCraterSide = false;
 
-    public AutonomousCraterVision() {
+    public AutonomousVision() {
         msStuckDetectInit = 18000;
     }
     VuforiaCam vuCam;
@@ -143,6 +144,45 @@ public class AutonomousCraterVision extends LinearOpMode {
             return;
         }
 
+        switch (navTargets.lastVuMarkName) {
+            case VuforiaCam.BACK_WALL_VUMARK_NAME:
+            {
+                isCraterSide = false;
+                alignmentTargetCoords = new Point2D(72-18, 0);
+                alignmentTargetHeading = 90;
+                break;
+            }
+            case VuforiaCam.BLUE_WALL_VUMARK_NAME:
+            {
+                isCraterSide = true;
+                alignmentTargetCoords = new Point2D(0, 72-18);
+                alignmentTargetHeading = 0;
+                break;
+            }
+            case VuforiaCam.FRONT_WALL_VUMARK_NAME:
+            {
+                isCraterSide = false;
+                alignmentTargetCoords = new Point2D(-72+18, 0);
+                alignmentTargetHeading = -90;
+                break;
+            }
+            case VuforiaCam.RED_WALL_VUMARK_NAME:
+            {
+                isCraterSide = true;
+                alignmentTargetCoords = new Point2D(0, -72+18);
+                alignmentTargetHeading = 180;
+                break;
+            }
+            default:
+            {
+                telemetry.addLine("Unable to find VuMark. Parking here.");
+                telemetry.update();
+                sleep(3000); // Let the message show for a bit.
+                return;
+            }
+
+        }
+
         PolarCoordinate destination = Positioning.calcPolarCoordinate(navTargets.lastKnownLocation, alignmentTargetCoords);
         double newHeading = navTargets.lastKnownLocation.heading + destination.angle;
 
@@ -191,12 +231,17 @@ public class AutonomousCraterVision extends LinearOpMode {
          **/
 
         // Turn to drive to depot.
-        robot.drivetrain.driveRoute(new Rotation(90 + adjustment, 0.3, 2));
+        if (isCraterSide) {
+            robot.drivetrain.driveRoute(new Rotation(-90 + adjustment, 0.3, 2));
+        } else {
+            robot.drivetrain.driveRoute(new Rotation(90 + adjustment, 0.3, 2));
+        }
+
 
         // Drive to depot.
         robot.drivetrain.driveRoute(new StraightRoute(72 - 12, 0.8, 5)); // Drive up to 12" away from the wall.
 
-        // Rotate slightly to drop the marker.
+        // Rotate to drop the marker.
         robot.drivetrain.driveRoute(new Rotation(30, 0.3, 2));
 
         // Drop it
