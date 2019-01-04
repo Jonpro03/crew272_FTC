@@ -64,6 +64,12 @@ public class AutonomousCraterVision extends LinearOpMode {
         }
 
         // Approach the gold ore
+        /** Geometry
+         * The distance (b) from the robot to the center ore is 34".
+         * The distance (a) between ores is 14.5".
+         * The distance (c) to an ore on the side is c^2 = a^2+b^2, c = 36.9".
+         * The angle to drive to an ore (left/right) is angle A. sin(A)=a/c, A = 23.1 degrees.
+        **/
         switch(goldPos) {
             case Positioning.LEFT: {
                 robot.drivetrain.driveRoute(new Rotation(-23, 0.3, 1));
@@ -157,6 +163,8 @@ public class AutonomousCraterVision extends LinearOpMode {
         double rot = alignmentTargetHeading - newHeading;
         robot.drivetrain.driveRoute(new Rotation(rot, 0.3, 2));
 
+        double adjustment = 0;
+
         /** Uncomment if we need to line up again. For the remainder of the journey, there are no vumarks in sight.
         // Try up to 3 times to find the VuMark
         targetFound = false;
@@ -178,11 +186,12 @@ public class AutonomousCraterVision extends LinearOpMode {
             return;
         }
 
-        // See how close we are to our target heading.
+        // See how close we are to our target heading and adjust the next turn.
+         adjustment = alignmentTargetHeading - navTargets.lastKnownLocation.heading;
          **/
 
         // Turn to drive to depot.
-        robot.drivetrain.driveRoute(new Rotation(90, 0.3, 2));
+        robot.drivetrain.driveRoute(new Rotation(90 + adjustment, 0.3, 2));
 
         // Drive to depot.
         robot.drivetrain.driveRoute(new StraightRoute(72 - 12, 0.8, 5)); // Drive up to 12" away from the wall.
