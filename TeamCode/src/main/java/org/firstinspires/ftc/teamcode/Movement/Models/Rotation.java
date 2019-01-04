@@ -1,4 +1,6 @@
-package org.firstinspires.ftc.teamcode.Movement;
+package org.firstinspires.ftc.teamcode.Movement.Models;
+
+import org.firstinspires.ftc.teamcode.Movement.Models.Route;
 
 public class Rotation extends Route {
 

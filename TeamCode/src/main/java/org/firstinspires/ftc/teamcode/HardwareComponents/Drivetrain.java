@@ -4,10 +4,9 @@ package org.firstinspires.ftc.teamcode.HardwareComponents;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Movement.AutonomousRoute;
+import org.firstinspires.ftc.teamcode.Movement.Models.AutonomousRoute;
 import org.firstinspires.ftc.teamcode.HardwareComponents.Motors.EncodedMotor;
-import org.firstinspires.ftc.teamcode.Movement.Route;
+import org.firstinspires.ftc.teamcode.Movement.Models.Route;
 
 import static android.os.SystemClock.sleep;
 

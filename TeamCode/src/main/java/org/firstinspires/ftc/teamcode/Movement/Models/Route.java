@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Movement;
+package org.firstinspires.ftc.teamcode.Movement.Models;
 
 public class Route {
     public double leftIn;

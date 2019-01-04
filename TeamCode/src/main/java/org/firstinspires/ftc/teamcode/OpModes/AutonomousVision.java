@@ -7,8 +7,8 @@ import org.firstinspires.ftc.teamcode.HardwareComponents.Camera.CameraNavTargets
 import org.firstinspires.ftc.teamcode.HardwareComponents.Camera.CameraOreDetection;
 import org.firstinspires.ftc.teamcode.HardwareComponents.Camera.VuforiaCam;
 import org.firstinspires.ftc.teamcode.Movement.Models.Point2D;
-import org.firstinspires.ftc.teamcode.Movement.Rotation;
-import org.firstinspires.ftc.teamcode.Movement.StraightRoute;
+import org.firstinspires.ftc.teamcode.Movement.Models.Rotation;
+import org.firstinspires.ftc.teamcode.Movement.Models.StraightRoute;
 import org.firstinspires.ftc.teamcode.Movement.Positioning;
 import org.firstinspires.ftc.teamcode.Movement.Models.PolarCoordinate;
 import org.firstinspires.ftc.teamcode.Robot;
@@ -29,6 +29,7 @@ public class AutonomousVision extends LinearOpMode {
     static final int ARENA_RADIUS = 72;
     static final int WALL_DISTANCE = 18;
     static final double TURN_SPEED = 0.3;
+    static final double HALF_SPEED = 0.5;
 
     public void initialize() {
         robot = new Robot(hardwareMap, false);
@@ -57,7 +58,7 @@ public class AutonomousVision extends LinearOpMode {
         robot.screwLift.retract(false);
 
         // Pull away from the lander and scan ores
-        robot.drivetrain.driveRoute(new StraightRoute(3,0.5, 2));
+        robot.drivetrain.driveRoute(new StraightRoute(3,HALF_SPEED, 2));
 
         int goldPos = Positioning.UNKNOWN;
 
@@ -78,17 +79,17 @@ public class AutonomousVision extends LinearOpMode {
         switch(goldPos) {
             case Positioning.LEFT: {
                 robot.drivetrain.driveRoute(new Rotation(-23, TURN_SPEED, 1));
-                robot.drivetrain.driveRoute(new StraightRoute(37, 0.5, 3));
+                robot.drivetrain.driveRoute(new StraightRoute(37, HALF_SPEED, 3));
                 break;
             }
             case Positioning.STRAIGHT:
             case Positioning.UNKNOWN: {
-                robot.drivetrain.driveRoute(new StraightRoute(34, 0.5, 3));
+                robot.drivetrain.driveRoute(new StraightRoute(34, HALF_SPEED, 3));
                 break;
             }
             case Positioning.RIGHT: {
                 robot.drivetrain.driveRoute(new Rotation(23, TURN_SPEED, 1));
-                robot.drivetrain.driveRoute(new StraightRoute(37, 0.5, 3));
+                robot.drivetrain.driveRoute(new StraightRoute(37, HALF_SPEED, 3));
                 break;
             }
         }
@@ -103,23 +104,23 @@ public class AutonomousVision extends LinearOpMode {
         // Retreat to previous position
         switch(goldPos) {
             case Positioning.LEFT: {
-                robot.drivetrain.driveRoute(new StraightRoute(-37, 0.5, 3));
+                robot.drivetrain.driveRoute(new StraightRoute(-37, HALF_SPEED, 3));
                 robot.drivetrain.driveRoute(new Rotation(23, TURN_SPEED, 1));
                 break;
             }
             case Positioning.STRAIGHT: {
-                robot.drivetrain.driveRoute(new StraightRoute(-34, 0.5, 3));
+                robot.drivetrain.driveRoute(new StraightRoute(-34, HALF_SPEED, 3));
                 break;
             }
             case Positioning.RIGHT: {
-                robot.drivetrain.driveRoute(new StraightRoute(-37, 0.5, 3));
+                robot.drivetrain.driveRoute(new StraightRoute(-37, HALF_SPEED, 3));
                 robot.drivetrain.driveRoute(new Rotation(-23, TURN_SPEED, 1));
                 break;
             }
         }
 
         // Navigate to the VuMark
-        robot.drivetrain.driveRoute(new StraightRoute(20, 0.5, 2));
+        robot.drivetrain.driveRoute(new StraightRoute(20, HALF_SPEED, 2));
 
         robot.drivetrain.driveRoute(new Rotation(-90, TURN_SPEED, 2));
 
@@ -202,7 +203,7 @@ public class AutonomousVision extends LinearOpMode {
 
         // Move to destination.
         robot.drivetrain.driveRoute(new Rotation(destination.angle, TURN_SPEED, 2));
-        robot.drivetrain.driveRoute(new StraightRoute(destination.length, 0.5, 3));
+        robot.drivetrain.driveRoute(new StraightRoute(destination.length, HALF_SPEED, 3));
 
         // Turn to face the vumark.
         double rot = alignmentTargetHeading - newHeading;
@@ -263,7 +264,7 @@ public class AutonomousVision extends LinearOpMode {
 
         // Extra push to make sure things are in the depot.
         robot.drivetrain.driveRoute(new StraightRoute(-8, 0.8, 2));
-        robot.drivetrain.driveRoute(new StraightRoute(8, 0.5, 2));
+        robot.drivetrain.driveRoute(new StraightRoute(8, HALF_SPEED, 2));
 
         // Drive into crater
         robot.drivetrain.driveRoute(new StraightRoute(-128, 0.8, 8));

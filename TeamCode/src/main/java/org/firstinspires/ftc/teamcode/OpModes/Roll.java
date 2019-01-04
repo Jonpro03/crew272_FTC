@@ -1,13 +1,9 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
-import org.firstinspires.ftc.teamcode.Movement.Rotation;
-import org.firstinspires.ftc.teamcode.Movement.Route;
-import org.firstinspires.ftc.teamcode.Movement.StraightRoute;
+import org.firstinspires.ftc.teamcode.Movement.Models.Rotation;
 import org.firstinspires.ftc.teamcode.Robot;
 
 
@@ -27,10 +23,15 @@ public class Roll extends LinearOpMode {
         initialize();
         waitForStart();
         sleep(1000);
+        robot.drivetrain.driveRoute(new Rotation(-90, 0.3, 3));
 
-        robot.drivetrain.driveRoute(new Rotation(-90, 0.3, 3
+        sleep(1000);
+        robot.drivetrain.driveRoute(new Rotation(180, 0.3, 3));
 
-        ));
+        sleep(1000);
+        robot.drivetrain.driveRoute(new Rotation(-90, 0.3, 3));
+
+
 
         /**
         robot.drivetrain.leftDriveMotor.useSmooth = false;

@@ -2,10 +2,8 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
-import org.firstinspires.ftc.teamcode.Movement.Rotation;
-import org.firstinspires.ftc.teamcode.Movement.StraightRoute;
+import org.firstinspires.ftc.teamcode.Movement.Models.StraightRoute;
 import org.firstinspires.ftc.teamcode.Robot;
 
 

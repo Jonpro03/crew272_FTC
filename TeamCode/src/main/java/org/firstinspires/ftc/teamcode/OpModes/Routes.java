@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import org.firstinspires.ftc.teamcode.Movement.AutonomousRoute;
-import org.firstinspires.ftc.teamcode.Movement.Rotation;
-import org.firstinspires.ftc.teamcode.Movement.StraightRoute;
+import org.firstinspires.ftc.teamcode.Movement.Models.AutonomousRoute;
+import org.firstinspires.ftc.teamcode.Movement.Models.Rotation;
+import org.firstinspires.ftc.teamcode.Movement.Models.StraightRoute;
 
 import java.util.Arrays;
 
