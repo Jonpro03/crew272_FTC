@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Movement.Positioning;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CameraOreDetection {
@@ -60,7 +61,7 @@ public class CameraOreDetection {
         return Positioning.STRAIGHT;
     }
 
-    public int determineGoldPosition() {
+    public int determineGoldPosition(Telemetry telem) {
         CameraDevice.getInstance().setFlashTorchMode(true);
 
         int goldx = 0;
@@ -72,6 +73,15 @@ public class CameraOreDetection {
             CameraDevice.getInstance().setFlashTorchMode(false);
             return Positioning.UNKNOWN;
         }
+
+        List<Recognition> scopedList = new ArrayList<Recognition>();
+        for (Recognition r : recognitions) {
+            telem.addLine(r.getLabel() + ": " + r.getWidth());
+            if (r.getWidth() > 34) {
+                scopedList.add(r);
+            }
+        }
+        telem.update();
 
         for (Recognition r : recognitions) {
             if (r.getLabel().equals(LABEL_GOLD_MINERAL)) {

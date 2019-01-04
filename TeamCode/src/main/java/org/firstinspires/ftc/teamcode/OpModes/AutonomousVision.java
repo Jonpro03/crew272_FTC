@@ -58,14 +58,14 @@ public class AutonomousVision extends LinearOpMode {
         robot.screwLift.retract(false);
 
         // Pull away from the lander and scan ores
-        robot.drivetrain.driveRoute(new StraightRoute(3,HALF_SPEED, 2));
+        robot.drivetrain.driveRoute(new StraightRoute(3, HALF_SPEED, 2));
 
         int goldPos = Positioning.UNKNOWN;
 
         // Try up to 3 times to sample the ores
         for (int i=0; i<3; i++) {
             sleep(500);
-            goldPos = oreDetect.determineGoldPosition();
+            goldPos = oreDetect.determineGoldPosition(telemetry);
             if (goldPos != Positioning.UNKNOWN) { break; }
         }
 
@@ -76,20 +76,24 @@ public class AutonomousVision extends LinearOpMode {
          * The distance (c) to an ore on the side is c^2 = a^2+b^2, c = 36.9".
          * The angle to drive to an ore (left/right) is angle A. sin(A)=a/c, A = 23.1 degrees.
         **/
+        double a = 14.5;
+        double b = 34;
+        double c = Math.sqrt((a*a) + (b*b));
+        double A = Math.toDegrees(Math.atan2(a, b));
         switch(goldPos) {
             case Positioning.LEFT: {
-                robot.drivetrain.driveRoute(new Rotation(-23, TURN_SPEED, 1));
-                robot.drivetrain.driveRoute(new StraightRoute(37, HALF_SPEED, 3));
+                robot.drivetrain.driveRoute(new Rotation(-A, TURN_SPEED, 1));
+                robot.drivetrain.driveRoute(new StraightRoute(c, HALF_SPEED, 3));
                 break;
             }
             case Positioning.STRAIGHT:
             case Positioning.UNKNOWN: {
-                robot.drivetrain.driveRoute(new StraightRoute(34, HALF_SPEED, 3));
+                robot.drivetrain.driveRoute(new StraightRoute(b, HALF_SPEED, 3));
                 break;
             }
             case Positioning.RIGHT: {
-                robot.drivetrain.driveRoute(new Rotation(23, TURN_SPEED, 1));
-                robot.drivetrain.driveRoute(new StraightRoute(37, HALF_SPEED, 3));
+                robot.drivetrain.driveRoute(new Rotation(A, TURN_SPEED, 1));
+                robot.drivetrain.driveRoute(new StraightRoute(c, HALF_SPEED, 3));
                 break;
             }
         }
@@ -104,17 +108,17 @@ public class AutonomousVision extends LinearOpMode {
         // Retreat to previous position
         switch(goldPos) {
             case Positioning.LEFT: {
-                robot.drivetrain.driveRoute(new StraightRoute(-37, HALF_SPEED, 3));
-                robot.drivetrain.driveRoute(new Rotation(23, TURN_SPEED, 1));
+                robot.drivetrain.driveRoute(new StraightRoute(-c, HALF_SPEED, 3));
+                robot.drivetrain.driveRoute(new Rotation(A, TURN_SPEED, 1));
                 break;
             }
             case Positioning.STRAIGHT: {
-                robot.drivetrain.driveRoute(new StraightRoute(-34, HALF_SPEED, 3));
+                robot.drivetrain.driveRoute(new StraightRoute(-b, HALF_SPEED, 3));
                 break;
             }
             case Positioning.RIGHT: {
-                robot.drivetrain.driveRoute(new StraightRoute(-37, HALF_SPEED, 3));
-                robot.drivetrain.driveRoute(new Rotation(-23, TURN_SPEED, 1));
+                robot.drivetrain.driveRoute(new StraightRoute(-c, HALF_SPEED, 3));
+                robot.drivetrain.driveRoute(new Rotation(-A, TURN_SPEED, 1));
                 break;
             }
         }
