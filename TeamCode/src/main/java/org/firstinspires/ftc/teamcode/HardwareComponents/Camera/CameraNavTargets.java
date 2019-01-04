@@ -46,14 +46,15 @@ public class CameraNavTargets {
                 lastKnownLocation.position.y = translation.get(1) / mmPerInch;
 
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-                lastKnownLocation.rotation = (rotation.thirdAngle-90)*-1;
+                lastKnownLocation.heading = (rotation.thirdAngle-90)*-1;
 
                 telem.addData("Pos (in)", "{X, Y} = %.1f, %.1f", lastKnownLocation.position.x, lastKnownLocation.position.y);
-                telem.addData("Rotation (deg)", "{Heading} = %.0f", lastKnownLocation.rotation);
+                telem.addData("Rotation (deg)", "{Heading} = %.0f", lastKnownLocation.heading);
                 break;
             }
         }
 
+        CameraDevice.getInstance().setFlashTorchMode(false);
         return targetVisible;
     }
 

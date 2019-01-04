@@ -2,10 +2,10 @@ package org.firstinspires.ftc.teamcode.Movement.Models;
 
 public class Location {
     public Point2D position;
-    public double rotation;
+    public double heading;
 
-    public Location(Point2D pos, double rot) {
+    public Location(Point2D pos, double head) {
         this.position = pos;
-        this.rotation = rot;
+        this.heading = head;
     }
 }

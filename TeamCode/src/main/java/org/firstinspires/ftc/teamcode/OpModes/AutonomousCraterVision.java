@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.teamcode.HardwareComponents.Camera.CameraNavTargets;
 import org.firstinspires.ftc.teamcode.HardwareComponents.Camera.CameraOreDetection;
@@ -10,7 +9,7 @@ import org.firstinspires.ftc.teamcode.HardwareComponents.Camera.VuforiaCam;
 import org.firstinspires.ftc.teamcode.Movement.Models.Point2D;
 import org.firstinspires.ftc.teamcode.Movement.Rotation;
 import org.firstinspires.ftc.teamcode.Movement.StraightRoute;
-import org.firstinspires.ftc.teamcode.Movement.Utility;
+import org.firstinspires.ftc.teamcode.Movement.Positioning;
 import org.firstinspires.ftc.teamcode.Movement.Models.PolarCoordinate;
 import org.firstinspires.ftc.teamcode.Robot;
 
@@ -18,8 +17,8 @@ import org.firstinspires.ftc.teamcode.Robot;
 @Autonomous(name="Autonomous: Crater Vision", group="Autonomous")
 public class AutonomousCraterVision extends LinearOpMode {
     private Robot robot;
-    private boolean goldFound = false;
-
+    private Point2D alignmentTargetCoords = new Point2D(72-14,0); // 14" from the wall, in front of the picture.
+    private double alignmentTargetHeading = 90;
 
     public AutonomousCraterVision() {
         msStuckDetectInit = 18000;
@@ -40,70 +39,75 @@ public class AutonomousCraterVision extends LinearOpMode {
         initialize();
         waitForStart();
         CameraOreDetection oreDetect = new CameraOreDetection(hardwareMap, vuCam.vuforia);
-/**
-        //robot.screwLift.extend();
-        // Now we want to go half way down and wait a few seconds for the robot to line itself up
-        robot.screwLift.setTarget(1300);
-        while (!robot.screwLift.moveToTarget(0.3)) // Move slowly to reduce the shock of the descent
-        {
-            telemetry.addData("Encoder Pos", robot.screwLift.motor.getCurrentPosition());
-        }
-        sleep(2000); // wait for the robot to line itself up
 
-        // Finish going down the rest of the way
+        // Descend
         robot.screwLift.extend(true);
+        sleep(100);
 
         // Detach
         robot.latch.open();
         sleep(1000);
 
-        // Tell the screw lift to retract and take off toward the first ore.
+        // Retract screw lift
         robot.screwLift.retract(false);
- **/
-        //robot.drivetrain.driveRoute(new StraightRoute(3,0.5, 2));
 
-        /**
-        sleep(3000);
-        int goldPos = oreDetect.determineGoldPosition();
+        // Pull away from the lander and scan ores
+        robot.drivetrain.driveRoute(new StraightRoute(3,0.5, 2));
 
+        int goldPos = Positioning.UNKNOWN;
+
+        // Try up to 3 times to sample the ores
+        for (int i=0; i<3; i++) {
+            sleep(500);
+            goldPos = oreDetect.determineGoldPosition();
+            if (goldPos != Positioning.UNKNOWN) { break; }
+        }
+
+        // Approach the gold ore
         switch(goldPos) {
-            case Utility.LEFT: {
+            case Positioning.LEFT: {
                 robot.drivetrain.driveRoute(new Rotation(-23, 0.3, 1));
                 robot.drivetrain.driveRoute(new StraightRoute(37, 0.5, 3));
                 break;
             }
-            case Utility.STRAIGHT: {
+            case Positioning.STRAIGHT:
+            case Positioning.UNKNOWN: {
                 robot.drivetrain.driveRoute(new StraightRoute(34, 0.5, 3));
                 break;
             }
-            case Utility.RIGHT: {
+            case Positioning.RIGHT: {
                 robot.drivetrain.driveRoute(new Rotation(23, 0.3, 1));
                 robot.drivetrain.driveRoute(new StraightRoute(37, 0.5, 3));
                 break;
             }
         }
+
+        // Pick up the ore
         robot.twisty.moveForward(1);
         robot.scoop.open();
         sleep(700);
         robot.twisty.stop();
         robot.scoop.close();
+
+        // Retreat to previous position
         switch(goldPos) {
-            case Utility.LEFT: {
+            case Positioning.LEFT: {
                 robot.drivetrain.driveRoute(new StraightRoute(-37, 0.5, 3));
                 robot.drivetrain.driveRoute(new Rotation(23, 0.3, 1));
                 break;
             }
-            case Utility.STRAIGHT: {
+            case Positioning.STRAIGHT: {
                 robot.drivetrain.driveRoute(new StraightRoute(-34, 0.5, 3));
                 break;
             }
-            case Utility.RIGHT: {
+            case Positioning.RIGHT: {
                 robot.drivetrain.driveRoute(new StraightRoute(-37, 0.5, 3));
                 robot.drivetrain.driveRoute(new Rotation(-23, 0.3, 1));
                 break;
             }
         }
 
+        // Navigate to the VuMark
         robot.drivetrain.driveRoute(new StraightRoute(20, 0.5, 2));
 
         robot.drivetrain.driveRoute(new Rotation(-90, 0.3, 2));
@@ -112,76 +116,10 @@ public class AutonomousCraterVision extends LinearOpMode {
 
         robot.drivetrain.driveRoute(new Rotation(30, 0.3, 2));
 
-**/
-
-
+        // Try up to 3 times to find the VuMark
         CameraNavTargets navTargets = new CameraNavTargets(vuCam);
-        // Try up to 3 times to find the vumark target.
         boolean targetFound = false;
-        for (int i=0; i<3; i++) {
-            sleep(500);
-            targetFound = navTargets.check(telemetry);
-            if (targetFound) {
-                break;
-            } else {
-                sleep(500);
-            }
-        }
 
-        //robot.drivetrain.driveRoute(new Rotation(45, 0.3, 1));
-        telemetry.addLine("x: " + navTargets.lastKnownLocation.position.x);
-        telemetry.addLine("y: " + navTargets.lastKnownLocation.position.y);
-        telemetry.addLine("p:" + navTargets.lastKnownLocation.rotation);
-        telemetry.update();
-
-        sleep(10000);
-        Point2D target = new Point2D(52, 0); // 12" away from the wall, right in front of the picture.
-        PolarCoordinate destination = Utility.calcPolarCoordinate(navTargets.lastKnownLocation, target);
-        robot.drivetrain.driveRoute(new Rotation(destination.angle, 0.3, 2));
-        robot.drivetrain.driveRoute(new StraightRoute(destination.length, 0.5, 3));
-
-        telemetry.addLine("l: " + destination.length);
-        telemetry.addLine("o:" + destination.angle);
-        telemetry.update();
-
-
-        sleep(60000);
-
-/**
-        // Rotate Left and check the camera to see if a gold ore appears.
-        // Todo: Add fault timer.
-        while (!oreDetect.seeGold(telemetry)) {
-            robot.drivetrain.drive(-0.3, 0.3);
-        }
-        robot.drivetrain.drive(0, 0);
-
-        // We see an ore, so now we just need to line up with it.
-        int correctionDirection = Utility.LEFT;
-        // Todo: add fault timer.
-        while (correctionDirection != Utility.STRAIGHT) {
-            correctionDirection = oreDetect.goldDirection();
-            robot.drivetrain.drive(0.3 * correctionDirection, -0.3 * correctionDirection);
-        }
-
-        // Drive forward to hit the ore.
-        robot.drivetrain.driveRoute(new StraightRoute(12, 0.6, 2));
-        robot.drivetrain.driveRoute(new StraightRoute(-12, 0.6, 2));
-
-        robot.drivetrain.driveRoute(new Rotation(-45, 0.5, 2));
-
-        // red is -45
-        // blue 12 135
-
-        // red target location = 0, -48
-        double targetX = 0;
-        double targetY = -48;
-
-        Point2D target = new Point2D(0, -48);
-
-        // use the camera to straighten out.
-        CameraNavTargets navTargets = new CameraNavTargets(vuCam);
-        // Try up to 3 times to find the vumark target.
-        boolean targetFound = false;
         for (int i=0; i<3; i++) {
             targetFound = navTargets.check(telemetry);
             if (targetFound) {
@@ -191,36 +129,77 @@ public class AutonomousCraterVision extends LinearOpMode {
             }
         }
 
+        // If we couldn't find the vumark, stop here so we don't end up flipping the robot.
         if (!targetFound) {
-            // We don't know where we are, so just stop.
-            telemetry.addLine("Unable to find a target");
+            telemetry.addLine("Unable to find VuMark. Parking here.");
             telemetry.update();
+            sleep(3000); // Let the message show for a bit.
             return;
         }
 
-        PolarCoordinate destination = Utility.calcPolarCoordinate(navTargets.lastKnownLocation, target);
+        PolarCoordinate destination = Positioning.calcPolarCoordinate(navTargets.lastKnownLocation, alignmentTargetCoords);
+        double newHeading = navTargets.lastKnownLocation.heading + destination.angle;
 
-        // Rotate to point at destination
-        robot.drivetrain.driveRoute(new Rotation(destination.angle, 0.4, 2));
+        // Print out debug stuff to screen.
+        telemetry.addLine("x: " + navTargets.lastKnownLocation.position.x);
+        telemetry.addLine("y: " + navTargets.lastKnownLocation.position.y);
+        telemetry.addLine("r: " + navTargets.lastKnownLocation.heading);
+        telemetry.addLine("l: " + destination.length);
+        telemetry.addLine("a: " + destination.angle);
+        telemetry.addLine("h: " + newHeading);
+        telemetry.update();
 
-        // Drive the length of the hypotenuse
-        robot.drivetrain.driveRoute(new StraightRoute(destination.length, 0.8, 4));
+        // Move to destination.
+        robot.drivetrain.driveRoute(new Rotation(destination.angle, 0.3, 2));
+        robot.drivetrain.driveRoute(new StraightRoute(destination.length, 0.5, 3));
 
-        // Turn and look at the vumark. See how close we were
-        robot.drivetrain.driveRoute(new Rotation(45, 0.6, 2));
+        // Turn to face the vumark.
+        double rot = alignmentTargetHeading - newHeading;
+        robot.drivetrain.driveRoute(new Rotation(rot, 0.3, 2));
 
-        // Team marker is on the left side of the robot now.
-        // Turn right 90* so that we drop it into the depot,
-        // then turn back before going to the crater.
-        robot.drivetrain.driveRoute(new Rotation(82.5, 0.3, 3));
+        /** Uncomment if we need to line up again. For the remainder of the journey, there are no vumarks in sight.
+        // Try up to 3 times to find the VuMark
+        targetFound = false;
+
+        for (int i=0; i<3; i++) {
+            targetFound = navTargets.check(telemetry);
+            if (targetFound) {
+                break;
+            } else {
+                sleep(500);
+            }
+        }
+
+        // If we couldn't find the vumark, stop here so we don't end up flipping the robot.
+        if (!targetFound) {
+            telemetry.addLine("Unable to find VuMark. Parking here.");
+            telemetry.update();
+            sleep(3000); // Let the message show for a bit.
+            return;
+        }
+
+        // See how close we are to our target heading.
+         **/
+
+        // Turn to drive to depot.
+        robot.drivetrain.driveRoute(new Rotation(90, 0.3, 2));
+
+        // Drive to depot.
+        robot.drivetrain.driveRoute(new StraightRoute(72 - 12, 0.8, 5)); // Drive up to 12" away from the wall.
+
+        // Rotate slightly to drop the marker.
+        robot.drivetrain.driveRoute(new Rotation(30, 0.3, 2));
+
+        // Drop it
         robot.markerArm.open();
         sleep(1000);
         robot.markerArm.close();
-        robot.drivetrain.driveRoute(new Rotation(82.5, 0.3, 3));
 
-        // We've dropped our team marker, back straight up into the crater.
-        robot.drivetrain.driveRoute(Routes.DRIVE_TO_CRATER);
+        // Straighten out
+        robot.drivetrain.driveRoute(new Rotation(-30, 0.3, 2));
 
- **/
+        // Drive into crater
+        robot.drivetrain.driveRoute(new StraightRoute(-128, 0.8, 8));
+
     }
 }

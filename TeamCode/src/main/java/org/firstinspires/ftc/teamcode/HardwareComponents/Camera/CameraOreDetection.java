@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.HardwareComponents.Camera;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.Movement.Utility;
+import org.firstinspires.ftc.teamcode.Movement.Positioning;
 
 import java.util.List;
 
@@ -46,27 +47,30 @@ public class CameraOreDetection {
     public int goldDirection() {
         List<Recognition> recognitions = tfod.getRecognitions();
         if (recognitions == null || recognitions.size() == 0) {
-            return Utility.STRAIGHT;
+            return Positioning.STRAIGHT;
         }
         for (Recognition r : recognitions) {
             if (r.getLabel().equals(LABEL_GOLD_MINERAL)) {
                 int x = (int) r.getLeft();
-                if (x > 320) { return Utility.RIGHT; }
-                if (x < 280) { return Utility.LEFT; }
-                return Utility.STRAIGHT;
+                if (x > 320) { return Positioning.RIGHT; }
+                if (x < 280) { return Positioning.LEFT; }
+                return Positioning.STRAIGHT;
             }
         }
-        return Utility.STRAIGHT;
+        return Positioning.STRAIGHT;
     }
 
     public int determineGoldPosition() {
+        CameraDevice.getInstance().setFlashTorchMode(true);
+
         int goldx = 0;
         int silver1x = 0;
         int silver2x = 0;
 
         List<Recognition> recognitions = tfod.getRecognitions();
         if (recognitions == null || recognitions.size() == 0) {
-            return Utility.STRAIGHT;
+            CameraDevice.getInstance().setFlashTorchMode(false);
+            return Positioning.UNKNOWN;
         }
 
         for (Recognition r : recognitions) {
@@ -80,17 +84,21 @@ public class CameraOreDetection {
 
             if (!(goldx == 0 || silver1x == 0 || silver2x == 0)) {
                 if (goldx < silver1x && goldx < silver2x) {
-                    return Utility.LEFT;
+                    CameraDevice.getInstance().setFlashTorchMode(false);
+                    return Positioning.LEFT;
                 }
                 if (silver1x < goldx && goldx < silver2x) {
-                    return Utility.STRAIGHT;
+                    CameraDevice.getInstance().setFlashTorchMode(false);
+                    return Positioning.STRAIGHT;
                 }
                 else {
-                    return Utility.RIGHT;
+                    CameraDevice.getInstance().setFlashTorchMode(false);
+                    return Positioning.RIGHT;
                 }
             }
         }
-        return Utility.STRAIGHT;
+        CameraDevice.getInstance().setFlashTorchMode(false);
+        return Positioning.UNKNOWN;
     }
 
     public void shutDown() {
