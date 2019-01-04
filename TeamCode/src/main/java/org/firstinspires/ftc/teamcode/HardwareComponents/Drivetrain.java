@@ -12,11 +12,11 @@ import org.firstinspires.ftc.teamcode.Movement.Route;
 import static android.os.SystemClock.sleep;
 
 public class Drivetrain {
-    static final double ENCODER_TICKS = 1440;
+    static final double ENCODER_TICKS = 1456;
     static final double GEAR_REDUCTION = 0.66;
-    static final double WHEEL_DIAMETER = 4.5;
+    static final double WHEEL_DIAMETER = 5;
     static final double TICKS_PER_INCH = (ENCODER_TICKS * GEAR_REDUCTION) / (WHEEL_DIAMETER * Math.PI);
-    static final int SMOOTHING_INTERVAL = 10;
+    static final int SMOOTHING_INTERVAL = 5;
 
     public final EncodedMotor leftDriveMotor;
     public final EncodedMotor rightDriveMotor;

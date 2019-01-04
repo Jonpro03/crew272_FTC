@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.HardwareComponents.Camera;
 
+import com.vuforia.CameraDevice;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -27,6 +29,7 @@ public class CameraNavTargets {
     }
 
     public boolean check(Telemetry telem) {
+        CameraDevice.getInstance().setFlashTorchMode(true);
         targetVisible = false;
         for (VuforiaTrackable trackable : vuCam.allTrackables) {
             if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
@@ -43,7 +46,7 @@ public class CameraNavTargets {
                 lastKnownLocation.position.y = translation.get(1) / mmPerInch;
 
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-                lastKnownLocation.rotation = rotation.thirdAngle;
+                lastKnownLocation.rotation = (rotation.thirdAngle-90)*-1;
 
                 telem.addData("Pos (in)", "{X, Y} = %.1f, %.1f", lastKnownLocation.position.x, lastKnownLocation.position.y);
                 telem.addData("Rotation (deg)", "{Heading} = %.0f", lastKnownLocation.rotation);

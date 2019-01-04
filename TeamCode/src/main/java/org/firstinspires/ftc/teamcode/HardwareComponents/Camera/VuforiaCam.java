@@ -26,9 +26,9 @@ public class VuforiaCam {
     private static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
     private static final float mmTargetHeight   = (6) * mmPerInch;
 
-    final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is x mm in front of robot center
-    final int CAMERA_VERTICAL_DISPLACEMENT = 50;   // eg: Camera is x mm above ground
-    final int CAMERA_LEFT_DISPLACEMENT     = 200;     // eg: Camera is x mm from the robot's center line
+    final int CAMERA_FORWARD_DISPLACEMENT  = 190;   // eg: Camera is x mm in front of robot center
+    final int CAMERA_VERTICAL_DISPLACEMENT = 190;   // eg: Camera is x mm above ground
+    final int CAMERA_LEFT_DISPLACEMENT     = -50;     // eg: Camera is x mm from the robot's center line
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
 
     public List<VuforiaTrackable> allTrackables;
@@ -81,7 +81,7 @@ public class VuforiaCam {
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES,
-                        CAMERA_CHOICE == FRONT ? 90 : -90, 180, 0)); // Second angle = 180 for upside-down phone.
+                        CAMERA_CHOICE == FRONT ? 90 : -90, -15, 0)); // Second angle = 180 for upside-down phone.
 
         for (VuforiaTrackable trackable : allTrackables) {
             ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);

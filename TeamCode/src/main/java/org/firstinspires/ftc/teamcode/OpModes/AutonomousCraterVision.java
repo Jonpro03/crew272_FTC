@@ -40,7 +40,7 @@ public class AutonomousCraterVision extends LinearOpMode {
         initialize();
         waitForStart();
         CameraOreDetection oreDetect = new CameraOreDetection(hardwareMap, vuCam.vuforia);
-
+/**
         //robot.screwLift.extend();
         // Now we want to go half way down and wait a few seconds for the robot to line itself up
         robot.screwLift.setTarget(1300);
@@ -59,10 +59,95 @@ public class AutonomousCraterVision extends LinearOpMode {
 
         // Tell the screw lift to retract and take off toward the first ore.
         robot.screwLift.retract(false);
+ **/
+        //robot.drivetrain.driveRoute(new StraightRoute(3,0.5, 2));
 
-        robot.drivetrain.driveRoute(new StraightRoute(8,8, 2));
-        robot.drivetrain.driveRoute(new Rotation(30, 0.5, 1));
+        /**
+        sleep(3000);
+        int goldPos = oreDetect.determineGoldPosition();
 
+        switch(goldPos) {
+            case Utility.LEFT: {
+                robot.drivetrain.driveRoute(new Rotation(-23, 0.3, 1));
+                robot.drivetrain.driveRoute(new StraightRoute(37, 0.5, 3));
+                break;
+            }
+            case Utility.STRAIGHT: {
+                robot.drivetrain.driveRoute(new StraightRoute(34, 0.5, 3));
+                break;
+            }
+            case Utility.RIGHT: {
+                robot.drivetrain.driveRoute(new Rotation(23, 0.3, 1));
+                robot.drivetrain.driveRoute(new StraightRoute(37, 0.5, 3));
+                break;
+            }
+        }
+        robot.twisty.moveForward(1);
+        robot.scoop.open();
+        sleep(700);
+        robot.twisty.stop();
+        robot.scoop.close();
+        switch(goldPos) {
+            case Utility.LEFT: {
+                robot.drivetrain.driveRoute(new StraightRoute(-37, 0.5, 3));
+                robot.drivetrain.driveRoute(new Rotation(23, 0.3, 1));
+                break;
+            }
+            case Utility.STRAIGHT: {
+                robot.drivetrain.driveRoute(new StraightRoute(-34, 0.5, 3));
+                break;
+            }
+            case Utility.RIGHT: {
+                robot.drivetrain.driveRoute(new StraightRoute(-37, 0.5, 3));
+                robot.drivetrain.driveRoute(new Rotation(-23, 0.3, 1));
+                break;
+            }
+        }
+
+        robot.drivetrain.driveRoute(new StraightRoute(20, 0.5, 2));
+
+        robot.drivetrain.driveRoute(new Rotation(-90, 0.3, 2));
+
+        robot.drivetrain.driveRoute(new StraightRoute(37, 0.8, 4));
+
+        robot.drivetrain.driveRoute(new Rotation(30, 0.3, 2));
+
+**/
+
+
+        CameraNavTargets navTargets = new CameraNavTargets(vuCam);
+        // Try up to 3 times to find the vumark target.
+        boolean targetFound = false;
+        for (int i=0; i<3; i++) {
+            sleep(500);
+            targetFound = navTargets.check(telemetry);
+            if (targetFound) {
+                break;
+            } else {
+                sleep(500);
+            }
+        }
+
+        //robot.drivetrain.driveRoute(new Rotation(45, 0.3, 1));
+        telemetry.addLine("x: " + navTargets.lastKnownLocation.position.x);
+        telemetry.addLine("y: " + navTargets.lastKnownLocation.position.y);
+        telemetry.addLine("p:" + navTargets.lastKnownLocation.rotation);
+        telemetry.update();
+
+        sleep(10000);
+        Point2D target = new Point2D(52, 0); // 12" away from the wall, right in front of the picture.
+        PolarCoordinate destination = Utility.calcPolarCoordinate(navTargets.lastKnownLocation, target);
+        robot.drivetrain.driveRoute(new Rotation(destination.angle, 0.3, 2));
+        robot.drivetrain.driveRoute(new StraightRoute(destination.length, 0.5, 3));
+
+        telemetry.addLine("l: " + destination.length);
+        telemetry.addLine("o:" + destination.angle);
+        telemetry.update();
+
+
+        sleep(60000);
+
+/**
         // Rotate Left and check the camera to see if a gold ore appears.
         // Todo: Add fault timer.
         while (!oreDetect.seeGold(telemetry)) {
@@ -135,18 +220,7 @@ public class AutonomousCraterVision extends LinearOpMode {
 
         // We've dropped our team marker, back straight up into the crater.
         robot.drivetrain.driveRoute(Routes.DRIVE_TO_CRATER);
+
+ **/
     }
-
-    private void checkGoldOre() {
-        robot.colorArm.open();
-        sleep(500);
-        NormalizedRGBA colors;
-        colors = robot.colorSensor.getNormalizedColors();
-        goldFound = colors.blue < colors.red && colors.blue < colors.green;
-        if (goldFound)
-            robot.drivetrain.driveRoute(Routes.ORE_FOUND);
-        robot.colorArm.close();
-    }
-
-
 }

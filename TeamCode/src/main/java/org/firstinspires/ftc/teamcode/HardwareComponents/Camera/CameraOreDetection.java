@@ -59,6 +59,40 @@ public class CameraOreDetection {
         return Utility.STRAIGHT;
     }
 
+    public int determineGoldPosition() {
+        int goldx = 0;
+        int silver1x = 0;
+        int silver2x = 0;
+
+        List<Recognition> recognitions = tfod.getRecognitions();
+        if (recognitions == null || recognitions.size() == 0) {
+            return Utility.STRAIGHT;
+        }
+
+        for (Recognition r : recognitions) {
+            if (r.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                goldx = (int) r.getLeft();
+            } else if (silver1x == 0) {
+                silver1x = (int) r.getLeft();
+            } else {
+                silver2x = (int) r.getLeft();
+            }
+
+            if (!(goldx == 0 || silver1x == 0 || silver2x == 0)) {
+                if (goldx < silver1x && goldx < silver2x) {
+                    return Utility.LEFT;
+                }
+                if (silver1x < goldx && goldx < silver2x) {
+                    return Utility.STRAIGHT;
+                }
+                else {
+                    return Utility.RIGHT;
+                }
+            }
+        }
+        return Utility.STRAIGHT;
+    }
+
     public void shutDown() {
         tfod.deactivate();
     }

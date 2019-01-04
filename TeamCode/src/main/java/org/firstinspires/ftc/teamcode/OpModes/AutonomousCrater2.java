@@ -52,13 +52,6 @@ public class AutonomousCrater2 extends LinearOpMode {
     }
 
     private void checkGoldOre() {
-        robot.colorArm.open();
-        sleep(500);
-        NormalizedRGBA colors;
-        colors = robot.colorSensor.getNormalizedColors();
-        goldFound = colors.blue < colors.red && colors.blue < colors.green;
-        if (goldFound)
-            robot.drivetrain.driveRoute(Routes.ORE_FOUND);
-        robot.colorArm.close();
+
     }
 }

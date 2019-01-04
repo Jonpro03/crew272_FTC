@@ -43,8 +43,6 @@ public class DriverControl extends OpMode {
          *  Forward - Right Trigger
          *  Reverse - Left Trigger
          *  Turn - Left Stick X Axis
-         *  ColorArm Extend - X
-         *  ColorArm Retract - Y
          *  MarkerArm Extend - A
          *  MarkerArm Retract - B
          *
@@ -113,25 +111,12 @@ public class DriverControl extends OpMode {
         }
 
         // Accept inputs for testing the autonomous mode servos
-        if (gamepad1.x) {
-            robot.colorArm.open();
-        }
-        if (gamepad1.y) {
-            robot.colorArm.close();
-        }
         if (gamepad1.a) {
             robot.markerArm.open();
         }
         if (gamepad1.b) {
             robot.markerArm.close();
         }
-
-        NormalizedRGBA colors = robot.colorSensor.getNormalizedColors();
-        telemetry.addLine()
-                .addData("a", "%.3f", colors.alpha)
-                .addData("r", "%.3f", colors.red)
-                .addData("g", "%.3f", colors.green)
-                .addData("b", "%.3f", colors.blue);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " +

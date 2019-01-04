@@ -14,8 +14,20 @@ public class Utility {
         double b = destinationPoint.y - currentLocation.position.y;
         double c = Math.sqrt((a * a) + (b * b));
 
-        double destAngle = Math.atan2(b, a);
+        double destAngle = Math.toDegrees(Math.atan2(a, b));
+        //double destAngle = Math.atan2(a, b);
         double correctedAngle = destAngle - currentLocation.rotation;
+        if (correctedAngle > 360) {
+            correctedAngle -= 360;
+        } else if (correctedAngle < -360) {
+            correctedAngle += 360;
+        }
+
+        if (correctedAngle > 180) {
+            correctedAngle -= 360;
+        } else if (correctedAngle < -180) {
+            correctedAngle += 360;
+        }
         return new PolarCoordinate(c, correctedAngle);
     }
 }

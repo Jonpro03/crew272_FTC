@@ -20,11 +20,9 @@ public class Robot {
     public final BoundedMotor screwLift;
     public final BoundedServo latch;
     public final BoundedServo scoop;
-    public final NormalizedColorSensor colorSensor;
     public final int soundId;
     public final ContinuousServo twisty;
     public final BoundedServo markerArm;
-    public final BoundedServo colorArm;
 
     public Robot(HardwareMap hwmap, boolean isDriverControl) {
         drivetrain = new Drivetrain(hwmap.get(DcMotor.class, "left_drive"),
@@ -53,7 +51,6 @@ public class Robot {
         scoop.upperLimit = scoop.openPos;
         scoop.initPos = scoop.closePos;
 
-        colorSensor = hwmap.get(NormalizedColorSensor.class, "color_sensor");
         soundId = hwmap.appContext.getResources().getIdentifier("roll", "raw", hwmap.appContext.getPackageName());
         SoundPlayer.getInstance().preload(hwmap.appContext, soundId);
 
@@ -61,23 +58,16 @@ public class Robot {
 
         markerArm = new BoundedServo(hwmap.get(Servo.class, "marker_arm"));
         markerArm.setReverse();
-        markerArm.openPos = 0.75;
-        markerArm.closePos = 0;
+        markerArm.openPos = 0;
+        markerArm.closePos = 0.5;
         markerArm.initPos = markerArm.closePos;
         markerArm.upperLimit = markerArm.openPos;
         markerArm.lowerLimit = markerArm.closePos;
-
-        colorArm = new BoundedServo(hwmap.get(Servo.class, "color_arm"));
-        colorArm.setReverse();
-        colorArm.openPos = 0.94;
-        colorArm.closePos = 0.32;
-        colorArm.initPos = colorArm.closePos;
-        colorArm.upperLimit = colorArm.openPos;
-        colorArm.lowerLimit = colorArm.closePos;
-
     }
 
     public void init() {
+        // Initialize screwLift
+        screwLift.init();
 
         // Initialize latch
         latch.init();
@@ -85,16 +75,7 @@ public class Robot {
         // Initialize scoop
         scoop.init();
 
-        // Initialize screwLift
-        screwLift.init();
-
-        // Initialize Color Sensor\
-        if (colorSensor instanceof SwitchableLight) {
-            ((SwitchableLight) colorSensor).enableLight(false);
-        }
-
         markerArm.init();
-        colorArm.init();
     }
 
     public void halt() {

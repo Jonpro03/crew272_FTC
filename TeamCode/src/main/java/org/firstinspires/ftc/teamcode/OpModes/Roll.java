@@ -28,6 +28,11 @@ public class Roll extends LinearOpMode {
         waitForStart();
         sleep(1000);
 
+        robot.drivetrain.driveRoute(new Rotation(-90, 0.3, 3
+
+        ));
+
+        /**
         robot.drivetrain.leftDriveMotor.useSmooth = false;
         robot.drivetrain.rightDriveMotor.useSmooth = false;
         SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, robot.soundId);
@@ -51,6 +56,7 @@ public class Roll extends LinearOpMode {
         sleep(1000);
         robot.drivetrain.driveRoute(new Route(0, 4, 0.3, 2));
         robot.drivetrain.driveRoute(new Route(4, 0, 0.3, 2));
+         **/
     }
 }
 
