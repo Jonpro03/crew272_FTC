@@ -17,14 +17,18 @@ import org.firstinspires.ftc.teamcode.Robot;
 @Autonomous(name="Autonomous: Vision", group="Autonomous")
 public class AutonomousVision extends LinearOpMode {
     private Robot robot;
-    private Point2D alignmentTargetCoords = new Point2D(72-14,0); // 14" from the wall, in front of the picture.
-    private double alignmentTargetHeading = 90;
+    private Point2D alignmentTargetCoords;
+    private double alignmentTargetHeading;
     private boolean isCraterSide = false;
 
     public AutonomousVision() {
         msStuckDetectInit = 18000;
     }
     VuforiaCam vuCam;
+
+    static final int ARENA_RADIUS = 72;
+    static final int WALL_DISTANCE = 18;
+    static final double TURN_SPEED = 0.3;
 
     public void initialize() {
         robot = new Robot(hardwareMap, false);
@@ -73,7 +77,7 @@ public class AutonomousVision extends LinearOpMode {
         **/
         switch(goldPos) {
             case Positioning.LEFT: {
-                robot.drivetrain.driveRoute(new Rotation(-23, 0.3, 1));
+                robot.drivetrain.driveRoute(new Rotation(-23, TURN_SPEED, 1));
                 robot.drivetrain.driveRoute(new StraightRoute(37, 0.5, 3));
                 break;
             }
@@ -83,7 +87,7 @@ public class AutonomousVision extends LinearOpMode {
                 break;
             }
             case Positioning.RIGHT: {
-                robot.drivetrain.driveRoute(new Rotation(23, 0.3, 1));
+                robot.drivetrain.driveRoute(new Rotation(23, TURN_SPEED, 1));
                 robot.drivetrain.driveRoute(new StraightRoute(37, 0.5, 3));
                 break;
             }
@@ -100,7 +104,7 @@ public class AutonomousVision extends LinearOpMode {
         switch(goldPos) {
             case Positioning.LEFT: {
                 robot.drivetrain.driveRoute(new StraightRoute(-37, 0.5, 3));
-                robot.drivetrain.driveRoute(new Rotation(23, 0.3, 1));
+                robot.drivetrain.driveRoute(new Rotation(23, TURN_SPEED, 1));
                 break;
             }
             case Positioning.STRAIGHT: {
@@ -109,7 +113,7 @@ public class AutonomousVision extends LinearOpMode {
             }
             case Positioning.RIGHT: {
                 robot.drivetrain.driveRoute(new StraightRoute(-37, 0.5, 3));
-                robot.drivetrain.driveRoute(new Rotation(-23, 0.3, 1));
+                robot.drivetrain.driveRoute(new Rotation(-23, TURN_SPEED, 1));
                 break;
             }
         }
@@ -117,11 +121,11 @@ public class AutonomousVision extends LinearOpMode {
         // Navigate to the VuMark
         robot.drivetrain.driveRoute(new StraightRoute(20, 0.5, 2));
 
-        robot.drivetrain.driveRoute(new Rotation(-90, 0.3, 2));
+        robot.drivetrain.driveRoute(new Rotation(-90, TURN_SPEED, 2));
 
         robot.drivetrain.driveRoute(new StraightRoute(37, 0.8, 4));
 
-        robot.drivetrain.driveRoute(new Rotation(30, 0.3, 2));
+        robot.drivetrain.driveRoute(new Rotation(30, TURN_SPEED, 2));
 
         // Try up to 3 times to find the VuMark
         CameraNavTargets navTargets = new CameraNavTargets(vuCam);
@@ -148,28 +152,28 @@ public class AutonomousVision extends LinearOpMode {
             case VuforiaCam.BACK_WALL_VUMARK_NAME:
             {
                 isCraterSide = false;
-                alignmentTargetCoords = new Point2D(72-18, 0);
+                alignmentTargetCoords = new Point2D(ARENA_RADIUS-WALL_DISTANCE, 0);
                 alignmentTargetHeading = 90;
                 break;
             }
             case VuforiaCam.BLUE_WALL_VUMARK_NAME:
             {
                 isCraterSide = true;
-                alignmentTargetCoords = new Point2D(0, 72-18);
+                alignmentTargetCoords = new Point2D(0, ARENA_RADIUS-WALL_DISTANCE);
                 alignmentTargetHeading = 0;
                 break;
             }
             case VuforiaCam.FRONT_WALL_VUMARK_NAME:
             {
                 isCraterSide = false;
-                alignmentTargetCoords = new Point2D(-72+18, 0);
+                alignmentTargetCoords = new Point2D(-ARENA_RADIUS+WALL_DISTANCE, 0);
                 alignmentTargetHeading = -90;
                 break;
             }
             case VuforiaCam.RED_WALL_VUMARK_NAME:
             {
                 isCraterSide = true;
-                alignmentTargetCoords = new Point2D(0, -72+18);
+                alignmentTargetCoords = new Point2D(0, -ARENA_RADIUS+WALL_DISTANCE);
                 alignmentTargetHeading = 180;
                 break;
             }
@@ -197,12 +201,12 @@ public class AutonomousVision extends LinearOpMode {
         telemetry.update();
 
         // Move to destination.
-        robot.drivetrain.driveRoute(new Rotation(destination.angle, 0.3, 2));
+        robot.drivetrain.driveRoute(new Rotation(destination.angle, TURN_SPEED, 2));
         robot.drivetrain.driveRoute(new StraightRoute(destination.length, 0.5, 3));
 
         // Turn to face the vumark.
         double rot = alignmentTargetHeading - newHeading;
-        robot.drivetrain.driveRoute(new Rotation(rot, 0.3, 2));
+        robot.drivetrain.driveRoute(new Rotation(rot, TURN_SPEED, 2));
 
         double adjustment = 0;
 
@@ -233,17 +237,17 @@ public class AutonomousVision extends LinearOpMode {
 
         // Turn to drive to depot.
         if (isCraterSide) {
-            robot.drivetrain.driveRoute(new Rotation(-90 + adjustment, 0.3, 2));
+            robot.drivetrain.driveRoute(new Rotation(-90 + adjustment, TURN_SPEED, 2));
         } else {
-            robot.drivetrain.driveRoute(new Rotation(90 + adjustment, 0.3, 2));
+            robot.drivetrain.driveRoute(new Rotation(90 + adjustment, TURN_SPEED, 2));
         }
 
 
         // Drive to depot.
-        robot.drivetrain.driveRoute(new StraightRoute(72 - 12, 0.8, 5)); // Drive up to 12" away from the wall.
+        robot.drivetrain.driveRoute(new StraightRoute(ARENA_RADIUS - 12, 0.8, 5)); // Drive up to 12" away from the wall.
 
         // Rotate to drop the marker.
-        robot.drivetrain.driveRoute(new Rotation(30, 0.3, 2));
+        robot.drivetrain.driveRoute(new Rotation(30, TURN_SPEED, 2));
 
         // Drop the mineral we're (hopefully) holding.
         robot.twisty.moveBackwards(1);
@@ -254,9 +258,10 @@ public class AutonomousVision extends LinearOpMode {
         robot.markerArm.close();
 
         // Straighten out
-        robot.drivetrain.driveRoute(new Rotation(-30, 0.3, 2));
+        robot.drivetrain.driveRoute(new Rotation(-30, TURN_SPEED, 2));
         robot.twisty.stop();
 
+        // Extra push to make sure things are in the depot.
         robot.drivetrain.driveRoute(new StraightRoute(-8, 0.8, 2));
         robot.drivetrain.driveRoute(new StraightRoute(8, 0.5, 2));
 
