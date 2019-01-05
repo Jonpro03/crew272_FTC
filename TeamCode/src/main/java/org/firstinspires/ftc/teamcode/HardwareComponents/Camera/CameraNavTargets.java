@@ -49,6 +49,7 @@ public class CameraNavTargets {
 
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
                 lastKnownLocation.heading = (rotation.thirdAngle-90)*-1;
+                //lastKnownLocation.heading = rotation.thirdAngle;
 
                 telem.addData("Pos (in)", "{X, Y} = %.1f, %.1f", lastKnownLocation.position.x, lastKnownLocation.position.y);
                 telem.addData("Rotation (deg)", "{Heading} = %.0f", lastKnownLocation.heading);

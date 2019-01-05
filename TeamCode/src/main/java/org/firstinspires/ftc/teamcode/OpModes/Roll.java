@@ -22,14 +22,21 @@ public class Roll extends LinearOpMode {
 
         initialize();
         waitForStart();
-        sleep(1000);
-        robot.drivetrain.driveRoute(new Rotation(-90, 0.3, 3));
 
         sleep(1000);
-        robot.drivetrain.driveRoute(new Rotation(180, 0.3, 3));
+        robot.drivetrain.driveRoute(new Rotation(90, 0.1, 6));
+
 
         sleep(1000);
-        robot.drivetrain.driveRoute(new Rotation(-90, 0.3, 3));
+        robot.drivetrain.driveRoute(new Rotation(-90, 0.1, 3));
+
+
+        sleep(1000);
+        robot.drivetrain.driveRoute(new Rotation(90, 0.1, 6));
+
+
+        sleep(1000);
+        robot.drivetrain.driveRoute(new Rotation(-90, 0.1, 3));
 
 
 

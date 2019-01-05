@@ -15,7 +15,7 @@ public class Drivetrain {
     static final double GEAR_REDUCTION = 0.66;
     static final double WHEEL_DIAMETER = 5;
     static final double TICKS_PER_INCH = (ENCODER_TICKS * GEAR_REDUCTION) / (WHEEL_DIAMETER * Math.PI);
-    static final int SMOOTHING_INTERVAL = 5;
+    static final int SMOOTHING_INTERVAL = 1;
 
     public final EncodedMotor leftDriveMotor;
     public final EncodedMotor rightDriveMotor;
@@ -99,11 +99,11 @@ public class Drivetrain {
         }
         // Average current and desired power to get a smoothing average.
         if (intervalCounter % SMOOTHING_INTERVAL == 0) {
-            currentLeftPower = (currentLeftPower + currentLeftPower + left) / 3.0;
-            currentRightPower = (currentRightPower + currentRightPower + right) / 3.0;
+            currentLeftPower = (currentLeftPower + currentLeftPower + left) / 2.0;
+            currentRightPower = (currentRightPower + currentRightPower + right) / 2.0;
 
-            leftDriveMotor.setPower(currentLeftPower);
-            rightDriveMotor.setPower(currentRightPower);
+            leftDriveMotor.setPower(left);
+            rightDriveMotor.setPower(right);
         }
         intervalCounter++;
     }

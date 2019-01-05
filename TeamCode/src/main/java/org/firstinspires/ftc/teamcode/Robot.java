@@ -45,7 +45,7 @@ public class Robot {
 
         scoop = new BoundedServo(hwmap.get(Servo.class, "scoop"));
         //scoop.setReverse();
-        scoop.openPos = 0.55;
+        scoop.openPos = 0.65;
         scoop.closePos = 0;
         scoop.lowerLimit = 0.0;
         scoop.upperLimit = scoop.openPos;
@@ -58,8 +58,8 @@ public class Robot {
 
         markerArm = new BoundedServo(hwmap.get(Servo.class, "marker_arm"));
         markerArm.setReverse();
-        markerArm.openPos = 0;
-        markerArm.closePos = 0.5;
+        markerArm.openPos = 0.5;
+        markerArm.closePos = 0;
         markerArm.initPos = markerArm.closePos;
         markerArm.upperLimit = markerArm.openPos;
         markerArm.lowerLimit = markerArm.closePos;
