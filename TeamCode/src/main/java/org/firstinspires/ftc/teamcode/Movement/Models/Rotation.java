@@ -8,8 +8,11 @@ public class Rotation extends Route {
     static final double WHEEL_SLIP_CORRECTION_FACTOR = 1.87;
     static final double RIGHT_TURN_CORRECTION = 0.98 ;
 
+    public final double angle;
+
     public Rotation(double angle, double speed, double timeout) {
         super(0, 0, speed, timeout);
+        this.angle = angle;
 
         double arc = Math.toRadians(Math.abs(angle)) * (WHEELBASE_IN / 2) * WHEEL_SLIP_CORRECTION_FACTOR;
 

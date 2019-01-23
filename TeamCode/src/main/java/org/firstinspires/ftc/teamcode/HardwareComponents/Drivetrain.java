@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Movement.Models.AutonomousRoute;
 import org.firstinspires.ftc.teamcode.HardwareComponents.Motors.EncodedMotor;
+import org.firstinspires.ftc.teamcode.Movement.Models.Rotation;
 import org.firstinspires.ftc.teamcode.Movement.Models.Route;
 
 import static android.os.SystemClock.sleep;
@@ -106,5 +107,9 @@ public class Drivetrain {
             rightDriveMotor.setPower(currentRightPower);
         }
         intervalCounter++;
+    }
+
+    public void rotate(Rotation rot) {
+        //todo: turn while checking compass
     }
 }
