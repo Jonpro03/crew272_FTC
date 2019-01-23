@@ -7,6 +7,9 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
+import org.firstinspires.ftc.teamcode.HardwareComponents.CompassReading;
+import org.firstinspires.ftc.teamcode.HardwareComponents.CompassSensor;
 import org.firstinspires.ftc.teamcode.HardwareComponents.ContinuousServo;
 import org.firstinspires.ftc.teamcode.HardwareComponents.Drivetrain;
 import org.firstinspires.ftc.teamcode.HardwareComponents.BoundedServo;
@@ -22,10 +25,13 @@ public class Robot {
     public final ContinuousServo twisty;
     public final BoundedServo markerArm;
 
+
     public Robot(HardwareMap hwmap, boolean isDriverControl) {
+        CompassSensor compassSensor = new CompassSensor(hwmap.appContext);
+        CompassReading.getInstance().setCompassSensor(compassSensor);
+
         drivetrain = new Drivetrain(hwmap.get(DcMotor.class, "left_drive"),
                 hwmap.get(DcMotor.class, "right_drive"),
-
                 isDriverControl);
 
         screwLift = new BoundedMotor(hwmap.get(DcMotor.class, "screw_drive"),

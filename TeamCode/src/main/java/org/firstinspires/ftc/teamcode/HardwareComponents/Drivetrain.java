@@ -24,6 +24,7 @@ public class Drivetrain {
 
     private ElapsedTime runtime = new ElapsedTime();
     private double intervalCounter = 0;
+    private CompassReading compass;
 
     /**
      * drivetrain consists of left and right drive motors.
@@ -34,6 +35,7 @@ public class Drivetrain {
      * @param isDriverControl Whether autonomous or driver controlled.
      */
     public Drivetrain(DcMotor leftDrive, DcMotor rightDrive, boolean isDriverControl) {
+        compass = CompassReading.getInstance();
         leftDriveMotor = new EncodedMotor(leftDrive);
         rightDriveMotor = new EncodedMotor(rightDrive);
         rightDriveMotor.setReverse();
@@ -110,6 +112,43 @@ public class Drivetrain {
     }
 
     public void rotate(Rotation rot) {
-        //todo: turn while checking compass
+        Float currentRotation = compass.getReading();
+        if (currentRotation == null) { // If we can't use the compass, just use encoder ticks.
+            driveRoute(rot);
+            return;
+        }
+
+        // Change the operation of the motors for manual input.
+        leftDriveMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightDriveMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        runtime.reset();
+        currentLeftPower = rot.angle > 0 ? rot.speed : -rot.speed;
+        currentRightPower = rot.angle < 0 ? -rot.speed : rot.speed;
+        double destAngle = currentRotation + rot.angle;
+
+        leftDriveMotor.setPower(currentLeftPower);
+        rightDriveMotor.setPower(currentRightPower);
+
+        while (runtime.seconds() < rot.timeout) {
+            if (rot.angle > 0) {
+                // Turning right
+                if (compass.getReading() >= destAngle) {
+                    break;
+                }
+            } else if (rot.angle < 0) {
+                // Turning left
+                if (compass.getReading() <= destAngle) {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+
+        leftDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftDriveMotor.stop();
+        rightDriveMotor.stop();
     }
 }

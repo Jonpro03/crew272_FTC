@@ -88,7 +88,7 @@ public class AutonomousVision extends LinearOpMode {
         double A = Math.toDegrees(Math.atan2(a, b));
         switch(goldPos) {
             case Positioning.LEFT: {
-                robot.drivetrain.driveRoute(new Rotation(-A, TURN_SPEED, 1));
+                robot.drivetrain.rotate(new Rotation(-A, TURN_SPEED, 1));
                 robot.drivetrain.driveRoute(new StraightRoute(c, HALF_SPEED, 3));
                 break;
             }
@@ -98,7 +98,7 @@ public class AutonomousVision extends LinearOpMode {
                 break;
             }
             case Positioning.RIGHT: {
-                robot.drivetrain.driveRoute(new Rotation(A, TURN_SPEED, 1));
+                robot.drivetrain.rotate(new Rotation(A, TURN_SPEED, 1));
                 robot.drivetrain.driveRoute(new StraightRoute(c, HALF_SPEED, 3));
                 break;
             }
@@ -115,7 +115,7 @@ public class AutonomousVision extends LinearOpMode {
         switch(goldPos) {
             case Positioning.LEFT: {
                 robot.drivetrain.driveRoute(new StraightRoute(-c, HALF_SPEED, 3));
-                robot.drivetrain.driveRoute(new Rotation(A, TURN_SPEED, 1));
+                robot.drivetrain.rotate(new Rotation(A, TURN_SPEED, 1));
                 break;
             }
             case Positioning.STRAIGHT:
@@ -125,7 +125,7 @@ public class AutonomousVision extends LinearOpMode {
             }
             case Positioning.RIGHT: {
                 robot.drivetrain.driveRoute(new StraightRoute(-c, HALF_SPEED, 3));
-                robot.drivetrain.driveRoute(new Rotation(-A, TURN_SPEED, 1));
+                robot.drivetrain.rotate(new Rotation(-A, TURN_SPEED, 1));
                 break;
             }
         }
@@ -133,11 +133,11 @@ public class AutonomousVision extends LinearOpMode {
         // Navigate to the VuMark
         robot.drivetrain.driveRoute(new StraightRoute(20, HALF_SPEED, 4));
 
-        robot.drivetrain.driveRoute(new Rotation(-90, 0.3, 4));
+        robot.drivetrain.rotate(new Rotation(-90, 0.3, 4));
 
         robot.drivetrain.driveRoute(new StraightRoute(24, 1, 4));
 
-        robot.drivetrain.driveRoute(new Rotation(10, TURN_SPEED, 4));
+        robot.drivetrain.rotate(new Rotation(10, TURN_SPEED, 4));
 
         // Try up to 3 times to find the VuMark
         CameraNavTargets navTargets = new CameraNavTargets(vuCam);
@@ -213,12 +213,12 @@ public class AutonomousVision extends LinearOpMode {
         telemetry.update();
 
         // Move to destination.
-        robot.drivetrain.driveRoute(new Rotation(destination.angle, TURN_SPEED, 2));
+        robot.drivetrain.rotate(new Rotation(destination.angle, TURN_SPEED, 2));
         robot.drivetrain.driveRoute(new StraightRoute(destination.length, HALF_SPEED, 3));
 
         // Turn to face the vumark.
         double rot = alignmentTargetHeading - newHeading - 10;
-        robot.drivetrain.driveRoute(new Rotation(rot, 0.1, 2));
+        robot.drivetrain.rotate(new Rotation(rot, 0.1, 2));
 
         double adjustment = 0;
 
@@ -249,21 +249,21 @@ public class AutonomousVision extends LinearOpMode {
 
         // Turn to drive to depot.
         if (isCraterSide) {
-            robot.drivetrain.driveRoute(new Rotation(-90 + adjustment, 0.1, 4));
+            robot.drivetrain.rotate(new Rotation(-90 + adjustment, 0.1, 4));
         } else {
-            robot.drivetrain.driveRoute(new Rotation(90 + adjustment, 0.1, 4));
+            robot.drivetrain.rotate(new Rotation(90 + adjustment, 0.1, 4));
         }
 
         // Drive to depot.
         robot.drivetrain.driveRoute(new StraightRoute(ARENA_RADIUS - 24, 1, 5)); // Drive up to 12" away from the wall.
 
         if (isCraterSide){
-            robot.drivetrain.driveRoute(new Rotation(-45, 0.1, 3));
+            robot.drivetrain.rotate(new Rotation(-45, 0.1, 3));
             robot.drivetrain.driveRoute(new StraightRoute(12, 0.8, 2));
-            robot.drivetrain.driveRoute(new Rotation(160, 0.5, 8));
+            robot.drivetrain.rotate(new Rotation(160, 0.5, 8));
 
         } else {
-            robot.drivetrain.driveRoute(new Rotation(30, TURN_SPEED, 2));
+            robot.drivetrain.rotate(new Rotation(30, TURN_SPEED, 2));
         }
         // Rotate to drop the marker.
 
@@ -277,7 +277,7 @@ public class AutonomousVision extends LinearOpMode {
         robot.markerArm.close();
 
         // Straighten out
-        robot.drivetrain.driveRoute(new Rotation(-30, TURN_SPEED, 2));
+        robot.drivetrain.rotate(new Rotation(-30, TURN_SPEED, 2));
         robot.twisty.stop();
 
         // Extra push to make sure things are in the depot.
