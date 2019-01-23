@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -48,8 +47,8 @@ public class DriverControl extends OpMode {
          *
          *
          *  Gamepad 2:
-         *  scoop open - Right Trigger or Right Bumper
-         *  scoop close = Left Trigger or Left Bumper
+         *  twisty up - Right Trigger or Right Bumper
+         *  twisty down = Left Trigger or Left Bumper
          *  screwLift retract - DPad Down
          *  screwLift extend - DPad Up
          *  latch open - Y
@@ -74,14 +73,13 @@ public class DriverControl extends OpMode {
         robot.drivetrain.drive(leftPower, rightPower);
 
         // Accept inputs for the scoop
-        robot.scoop.setPosition(robot.scoop.getPosition() +
-                (gamepad2.right_trigger * SCOOP_SENSITIVITY_FACTOR) -
-                (gamepad2.left_trigger * SCOOP_SENSITIVITY_FACTOR));
+        robot.forklift.move(gamepad2.right_trigger - gamepad2.left_trigger);
+
         if(gamepad2.right_bumper) {
-            robot.scoop.close();
+            //robot.scoop.close();
         }
         if(gamepad2.left_bumper) {
-            robot.scoop.open();
+            //robot.scoop.open();
         }
 
         // Accept inputs for screw drive and latch
@@ -121,7 +119,7 @@ public class DriverControl extends OpMode {
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " +
                 "" + runtime.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        telemetry.addData("Motors", "left (%.2f), right (%.2f), lift (%.2f)", leftPower, rightPower, (float) robot.forklift.motor.getCurrentPosition());
         telemetry.addData("Encoder Pos", robot.screwLift.motor.getCurrentPosition());
         telemetry.addData("Actual Power", "left (%.2f), right (%.2f)", robot.drivetrain.leftDriveMotor.getPower(), robot.drivetrain.rightDriveMotor.getPower());
         telemetry.addData("Limit Switch", robot.screwLift.getSwitchPressed() ? "pressed" : "unpressed");

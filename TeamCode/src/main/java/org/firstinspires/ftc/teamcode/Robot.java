@@ -3,23 +3,21 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.teamcode.HardwareComponents.ContinuousServo;
 import org.firstinspires.ftc.teamcode.HardwareComponents.Drivetrain;
 import org.firstinspires.ftc.teamcode.HardwareComponents.BoundedServo;
 import org.firstinspires.ftc.teamcode.HardwareComponents.Motors.BoundedMotor;
+import org.firstinspires.ftc.teamcode.HardwareComponents.Motors.LimitedMotor;
 
 public class Robot {
     public final Drivetrain drivetrain;
     public final BoundedMotor screwLift;
+    public final LimitedMotor forklift;
     public final BoundedServo latch;
-    public final BoundedServo scoop;
     public final int soundId;
     public final ContinuousServo twisty;
     public final BoundedServo markerArm;
@@ -36,20 +34,15 @@ public class Robot {
         screwLift.setReverse();
         screwLift.maxPowerFactor = 0.5;
 
+        forklift = new LimitedMotor(hwmap.get(DcMotor.class, "forklift_drive"), 9400);
+        forklift.setReverse();
+
 
         latch = new BoundedServo(hwmap.get(Servo.class, "latch"));
         latch.setReverse();
         latch.openPos = 0.8;
         latch.closePos = 0.1;
         latch.initPos = isDriverControl ? latch.openPos : latch.closePos;
-
-        scoop = new BoundedServo(hwmap.get(Servo.class, "scoop"));
-        //scoop.setReverse();
-        scoop.openPos = 0.65;
-        scoop.closePos = 0;
-        scoop.lowerLimit = 0.0;
-        scoop.upperLimit = scoop.openPos;
-        scoop.initPos = scoop.closePos;
 
         soundId = hwmap.appContext.getResources().getIdentifier("roll", "raw", hwmap.appContext.getPackageName());
         SoundPlayer.getInstance().preload(hwmap.appContext, soundId);
@@ -72,10 +65,9 @@ public class Robot {
         // Initialize latch
         latch.init();
 
-        // Initialize scoop
-        scoop.init();
-
         markerArm.init();
+
+        forklift.init();
     }
 
     public void halt() {
@@ -84,5 +76,6 @@ public class Robot {
         screwLift.stop();
         twisty.stop();
         markerArm.close();
+        forklift.stop();
     }
 }

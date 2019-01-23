@@ -28,7 +28,7 @@ public class AutonomousVision extends LinearOpMode {
     VuforiaCam vuCam;
 
     static final int ARENA_RADIUS = 72;
-    static final int WALL_DISTANCE = 20;
+    static final int WALL_DISTANCE = 18;
     static final double TURN_SPEED = 0.2;
     static final double HALF_SPEED = 0.5;
 
@@ -106,10 +106,10 @@ public class AutonomousVision extends LinearOpMode {
 
         // Pick up the ore
         robot.twisty.moveForward(1);
-        robot.scoop.open();
+        //robot.scoop.open();
         sleep(700);
         robot.twisty.stop();
-        robot.scoop.close();
+        //robot.scoop.close();
 
         // Retreat to previous position
         switch(goldPos) {
@@ -131,11 +131,11 @@ public class AutonomousVision extends LinearOpMode {
         }
 
         // Navigate to the VuMark
-        robot.drivetrain.driveRoute(new StraightRoute(22, HALF_SPEED, 4));
+        robot.drivetrain.driveRoute(new StraightRoute(20, HALF_SPEED, 4));
 
         robot.drivetrain.driveRoute(new Rotation(-90, 0.3, 4));
 
-        robot.drivetrain.driveRoute(new StraightRoute(30, 0.8, 4));
+        robot.drivetrain.driveRoute(new StraightRoute(24, 1, 4));
 
         robot.drivetrain.driveRoute(new Rotation(10, TURN_SPEED, 4));
 
@@ -173,14 +173,14 @@ public class AutonomousVision extends LinearOpMode {
                 isCraterSide = true;
                 alignmentTargetCoords = new Point2D(0, ARENA_RADIUS-WALL_DISTANCE);
                 alignmentTargetHeading = 0;
-                break;
+                return;
             }
             case VuforiaCam.FRONT_WALL_VUMARK_NAME:
             {
                 isCraterSide = false;
                 alignmentTargetCoords = new Point2D(-ARENA_RADIUS+WALL_DISTANCE, 0);
-                alignmentTargetHeading = -90;
-                break;
+                alignmentTargetHeading = 90;
+                return;
             }
             case VuforiaCam.RED_WALL_VUMARK_NAME:
             {
@@ -249,18 +249,18 @@ public class AutonomousVision extends LinearOpMode {
 
         // Turn to drive to depot.
         if (isCraterSide) {
-            robot.drivetrain.driveRoute(new Rotation(-95 + adjustment, 0.1, 4));
+            robot.drivetrain.driveRoute(new Rotation(-90 + adjustment, 0.1, 4));
         } else {
             robot.drivetrain.driveRoute(new Rotation(90 + adjustment, 0.1, 4));
         }
 
         // Drive to depot.
-        robot.drivetrain.driveRoute(new StraightRoute(ARENA_RADIUS - 24, 0.8, 5)); // Drive up to 12" away from the wall.
+        robot.drivetrain.driveRoute(new StraightRoute(ARENA_RADIUS - 24, 1, 5)); // Drive up to 12" away from the wall.
 
         if (isCraterSide){
             robot.drivetrain.driveRoute(new Rotation(-45, 0.1, 3));
-            robot.drivetrain.driveRoute(new StraightRoute(12, 0.4, 2));
-            robot.drivetrain.driveRoute(new Rotation(180, 0.1, 8));
+            robot.drivetrain.driveRoute(new StraightRoute(12, 0.8, 2));
+            robot.drivetrain.driveRoute(new Rotation(160, 0.5, 8));
 
         } else {
             robot.drivetrain.driveRoute(new Rotation(30, TURN_SPEED, 2));

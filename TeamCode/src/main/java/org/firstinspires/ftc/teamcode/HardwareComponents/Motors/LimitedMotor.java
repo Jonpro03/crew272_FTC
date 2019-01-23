@@ -4,50 +4,48 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.Range;
 
-public class BoundedMotor extends EncodedMotor {
+public class LimitedMotor extends EncodedMotor {
 
     static final int LOWER_BOUND = 0;
     public int upperBound;
 
-    private final DigitalChannel limitSwitch;
 
     /**
      * Encoded motor that has a lower bound set by a limit switch, and
      * an upper bound defined as a number of encoder ticks past the lower.
      * @param tetrixMotor DcMotor.
-     * @param limitSwitch DigitialChannel for the limit switch.
      */
-    public BoundedMotor(DcMotor tetrixMotor, DigitalChannel limitSwitch, int upperBound) {
+    public LimitedMotor(DcMotor tetrixMotor, int upperBound) {
         super(tetrixMotor);
         this.upperBound = upperBound;
-        this.limitSwitch = limitSwitch;
-        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     /**
      * Initialize the Bounded motor by retracting until the lower limit is found.
+     *
      * Will return once the motor has reached the lower limit.
      */
     public void init() {
-        resetEncoder();
+        //resetEncoder();
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         useSmooth = false;
-        boolean switchPressed = getSwitchPressed();
 
-        if (switchPressed) { return; }
+    }
 
-        // Lower the motor and check for the switch press.
-        motor.setTargetPosition(-upperBound);
-        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        moveToTarget(0.5);
-        while (!switchPressed) {
-            switchPressed = getSwitchPressed();
+    public void move(double power) {
+        if (power > 0) {
+            if (motor.getCurrentPosition() < upperBound) {
+                motor.setPower(power);
+            }
+        } else if (power < 0) {
+            if (motor.getCurrentPosition() >= LOWER_BOUND) {
+                motor.setPower(power);
+            }
         }
-        stop();
-
-        resetEncoder();
-        useSmooth = true;
+        else {
+            motor.setPower(0);
+        }
     }
 
     @Override
@@ -56,7 +54,7 @@ public class BoundedMotor extends EncodedMotor {
         // Sanity check that the target needs to be set.
         if (motor.getTargetPosition() == targetOffset) { return; }
         motor.setTargetPosition(targetOffset);
-        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     /**
@@ -107,9 +105,5 @@ public class BoundedMotor extends EncodedMotor {
         while (!pathComplete) {
             pathComplete = moveToTarget(1);
         }
-    }
-
-    public boolean getSwitchPressed() {
-        return !limitSwitch.getState();
     }
 }

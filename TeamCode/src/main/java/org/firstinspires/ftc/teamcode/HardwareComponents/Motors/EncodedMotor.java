@@ -19,7 +19,7 @@ public class EncodedMotor extends Motor {
      */
     public EncodedMotor(DcMotor tetrixMotor) {
         super(tetrixMotor);
-        resetEncoder();
+        //resetEncoder();
     }
 
     /**
